@@ -6,6 +6,8 @@ import { SideBar } from '../components/SideBar';
 import { Hand } from '../components/Hand';
 import io from 'socket.io-client';
 import '../Styling.css'
+import { useParams } from 'react-router-dom';
+
 
 function Game({user}) {
     const instance = {user}.user;
@@ -18,11 +20,53 @@ function Game({user}) {
     const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
     const [response, setResponse] = useState('Connected to server')
+    const [users, setUsers] = useState([])
+    const { code } = useParams(); // This retrieves the game code from the URL
+    const game_room = code
 
+    // useEffect(() => {
+    //     // Connect to the server
+    //     const socketUrl = `http://localhost:3306/`;
+    //     const newSocket = io(socketUrl, { path: '/socket.io' });
+    //     setSocket(newSocket);
+    
+    //     // Listen for connection event
+    //     newSocket.on('connect', () => {
+    //         console.log('Connected to server');
+    //         setResponse('Connected to server');
+    //     });
+    
+    //     // Listen for disconnect event
+    //     newSocket.on('disconnect', () => {
+    //         console.log('Disconnected from server');
+    //         setResponse('Disconnected from server');
+    //     });
+
+    //     newSocket.on('moveResponse', (response) => {
+    //         console.log('Received move response:', response);
+    //         setOtherBoard(true);
+    //         setResponse('Recieved response: ' + response)
+    //     });
+
+    //     newSocket.on('getUsers', (users) => {
+    //         setUsers(users);
+    //         console.log(users)
+    //     });
+
+    //     newSocket.emit('join', `${game_room}, ${user}`);
+    //     console.log(`WebSocket: User ${user} joined room: ${game_room}`);
+    //     newSocket.emit('getUsers', `${game_room}`);
+    
+    //     // Clean up on unmount
+    //     return () => {
+    //         newSocket.disconnect();
+    //     };
+    // }, []);
 
     useEffect(() => {
         // Connect to the server
-        const newSocket = io('http://localhost:3306', { path: '/game/socket.io' });
+        const socketUrl = `http://localhost:3306/`;
+        const newSocket = io(socketUrl, { path: '/socket.io' });
         setSocket(newSocket);
     
         // Listen for connection event
@@ -37,12 +81,17 @@ function Game({user}) {
             setResponse('Disconnected from server');
         });
 
-        newSocket.on('moveResponse', (response) => {
+        newSocket.on('updateBoardResponse', (response) => {
             console.log('Received move response:', response);
             setOtherBoard(true);
-            setResponse('Recieved response: ' + response)
+            setResponse('Received response: ' + response)
         });
-    
+
+        newSocket.on('getUsers', (users) => {
+            setUsers(users);
+            console.log(users)
+        });
+        
         // Clean up on unmount
         return () => {
             newSocket.disconnect();
@@ -55,6 +104,10 @@ function Game({user}) {
         }
     }, [newBoard]);
 
+
+    const printUsers = () => {
+        console.log(users)
+    }
 
     useEffect(() => {
         setTurn(instance === player)
@@ -97,7 +150,9 @@ function Game({user}) {
                     </div>
                 )}
             </div>
-        </div>
+            <button>Join WebSocket Room</button>
+        <button onClick={() => printUsers()}>Print Users</button>
+    </div>
     ) : (
         <LoadingPage />
     );

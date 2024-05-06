@@ -44,7 +44,7 @@ function Home() {
                 <img src={title1} alt="Pegs And Jokers" />
                 {/* <h1 className="title">Pegs and Jokers</h1> */}
             </div>
-            <Link className="button-1" to='/game'>Game</Link>
+            <Link className="button-1" to='/waiting'>Game</Link>
             <Link className="button-1" to='/profile'>Profile</Link>
             <button className="button-1" onClick={handleLogout}>
                 Logout
