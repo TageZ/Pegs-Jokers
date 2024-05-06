@@ -1,14 +1,11 @@
-
 import React, {useState, useEffect} from 'react'
-import {Outlet, Link} from 'react-router-dom'
 import Board from '../components/Board'
 import NavBar from '../components/NavBar'
-import holesData from '../exampleBoard.json';
-import '../Styling.css'
+import LoadingPage from '../pages/Loading';
 import { SideBar } from '../components/SideBar';
 import { Hand } from '../components/Hand';
 import io from 'socket.io-client';
-
+import '../Styling.css'
 
 function Game({user}) {
     const instance = {user}.user;
@@ -20,7 +17,6 @@ function Game({user}) {
     const [otherBoard, setOtherBoard] = useState(true)
     const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
-    const [moveInput, setMoveInput] = useState('');
     const [response, setResponse] = useState('Connected to server')
 
 
@@ -64,26 +60,47 @@ function Game({user}) {
         setTurn(instance === player)
     }, [instance, player])
 
-    return (
-    <div className='game-page' data-testid="game-page">
-        <NavBar title = "Pegs & Jokers"/>
-        <div className='game'>
+    console.log(socket);
 
-            <div className='hand-section'>
-                <Hand setCard={setCard} hand={cards}/>
-            </div>
-        
-            <div className='game-body'>
-                <Board setCard={setCard} setPegs={setPegs} pegs={pegs} newBoard={newBoard} setBoard={setBoard} setCards={setCards} setPlayer={setPlayer} user={instance} turn={turn} otherBoard={otherBoard} setOtherBoard={setOtherBoard}/> 
-            </div>
-            {turn && (
-                <div className='side-bar'>
-                    <SideBar pegs={pegs} card={card} setCard={setCard} setPegs={setPegs} setBoard={setBoard} player={player}/>
+    return socket ? (
+        <div className='game-page' data-testid="game-page">
+            <NavBar title="Pegs & Jokers"/>
+            <div className='game'>
+                <div className='hand-section'>
+                    <Hand setCard={setCard} hand={cards}/>
                 </div>
-            )}
+                <div className='game-body'>
+                    <Board
+                        setCard={setCard}
+                        setPegs={setPegs}
+                        pegs={pegs}
+                        newBoard={newBoard}
+                        setBoard={setBoard}
+                        setCards={setCards}
+                        setPlayer={setPlayer}
+                        user={instance}
+                        turn={turn}
+                        otherBoard={otherBoard}
+                        setOtherBoard={setOtherBoard}
+                    /> 
+                </div>
+                {turn && (
+                    <div className='side-bar'>
+                        <SideBar
+                            pegs={pegs}
+                            card={card}
+                            setCard={setCard}
+                            setPegs={setPegs}
+                            setBoard={setBoard}
+                            player={player}
+                        />
+                    </div>
+                )}
+            </div>
         </div>
-    </div>
-    )
+    ) : (
+        <LoadingPage />
+    );
 }
 
 export default Game

@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import '../Styling.css'
 
-export function SideBar({pegs, card, is_split_move, setPegs, setCard, setBoard, player}) {
+export function SideBar({pegs, card, setPegs, setCard, setBoard, player}) {
 
+  const [splitMove, setSplitMove] = useState(false);
   const value = card ? card.value : 'No Card Selected';
+
 
   return (
       <div className='turn-bar'>
-          <h1 className='turn-header'>Play a Turn! {player}</h1>
+          <h1 className='turn-header'>Play a move, {player}!</h1>
           {pegs.map((peg, index) => (
               <div key={index} className='selected-peg'>
                   Peg {index+1}: {peg.color} {peg.num}
               </div>
           ))}
           <p className='selected-card'>{value}</p>
+          <div onClick={setSplitMove} className='split-move'>Is this a split move?</div>
           <div onClick={handleConfirmTurn} className='confirm-turn'>Confirm Turn</div>
       </div>
   )
@@ -47,7 +50,7 @@ export function SideBar({pegs, card, is_split_move, setPegs, setCard, setBoard, 
             "num": pegs[0].num
           },
           "gameID": 1
-        } : !is_split_move ?
+        } : !splitMove ?
         {
           "card": {
               "value": card.value
@@ -75,7 +78,7 @@ export function SideBar({pegs, card, is_split_move, setPegs, setCard, setBoard, 
               "num": pegs[1].num
             },
           "gameID": 1,
-          "spaces": 5
+          "spaces": 3
         };
       
       await postTurn(turn);
