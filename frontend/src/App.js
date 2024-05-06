@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Landing from './pages/Landing';
 import Reset from './pages/Reset';
+import Waiting from './pages/Waiting';
 
 function App() {
   
@@ -16,10 +17,11 @@ function App() {
         <Route index element={<Landing />} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/game/0" element={<Game user={0}/>} />
-          <Route path="/game/1" element={<Game user={1}/>} />
-          <Route path="/game/2" element={<Game user={2}/>} />
-          <Route path="/game/3" element={<Game user={3}/>} />
+          <Route path="/waiting" element={<Waiting />} />
+          <Route path="/:code/game/0" element={<Game user={0}/>} />
+          <Route path="/:code/game/1" element={<Game user={1}/>} />
+          <Route path="/:code/game/2" element={<Game user={2}/>} />
+          <Route path="/:code/game/3" element={<Game user={3}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/reset" element={<Reset />} />
