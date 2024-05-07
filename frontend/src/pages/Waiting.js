@@ -13,8 +13,11 @@ function Waiting() {
     const inputRef = useRef(null);
     const navigate = useNavigate();
     const [socket, setSocket] = useState(null);
-    const [numUsers, setNumUsers] = useState(0)
-    const [code, setCode] = useState('')
+    const [numUsers, setNumUsers] = useState(0);
+    const [code, setCode] = useState('');
+    const [roomFull, setRoomFull] = useState(false);
+    const [roomExists, setRoomExists] = useState(true);
+    const [roomNotMade, setRoomMade] = useState(false);
 
     const connectToServer = (code) => {
         return new Promise((resolve, reject) => {
@@ -23,12 +26,8 @@ function Waiting() {
             setSocket(newSocket);
     
             newSocket.on('connect', () => {
-                console.log('Connected to server');
-                newSocket.emit('join', `${code}, username`); // Emit event to join the room
-                newSocket.emit('requestUserCount', code); // Emit event to request user count
+                newSocket.emit('requestUserCount', code); 
             });
-    
-
     
             // Handle connection errors
             newSocket.on('connect_error', (error) => {
@@ -37,8 +36,7 @@ function Waiting() {
             });
     
             newSocket.on('userCountResponse', (userCount) => {
-                console.log(`Number of users in room ${code}: ${userCount}`);
-                resolve(userCount);  // Resolve the promise with userCount
+                resolve(userCount); 
             });
 
             return () => {
@@ -58,51 +56,61 @@ function Waiting() {
     }
 
     const joinGame = async (code) => {
-        if(code){
-            await connectToServer(code);  // Ensure this completes before navigating
-            navigate(`/${code}/game/${numUsers}`);
-        }
-    }
-
-    // const makeGame = (code) => {
-    //     console.log("CODE1: " + code)
-    //     if(code){
-    //         console.log("CODE: " + code)
-    //         connectToServer(code)
-    //         console.log(numUsers)
-    //         navigate(`/${code}/game/${numUsers}`)
-    //     }
-    // }
-
-    // const makeGame = async (code) => {
-    //     console.log("CODE1: " + code);
-    //     if (code) {
-    //         console.log("CODE: " + code);
-    //         try {
-    //             await connectToServer(code);  // Wait for connectToServer to complete
-    //             navigateToGame(code, numUsers);  // Then navigate
-    //         } catch (error) {
-    //             console.error('Failed to connect to server:', error);
-    //         }
-    //     }
-    // }
-    const makeGame = async (code) => {
-        console.log("CODE1: " + code);
         if (code) {
-            console.log("CODE: " + code);
             try {
-                let count = await connectToServer(code);  // Wait for connectToServer to complete and get the userCount
-                console.log(count);  // Log the userCount value
-                navigate(`/${code}/game/${count - 1}`);  // Navigate with the correct userCount value
+                let count = await connectToServer(code); 
+                if (count == 0){
+                    setRoomExists(false);
+                    setRoomFull(false);
+                }
+                else if (count > 3){
+                    setRoomFull(true);
+                    setRoomExists(true);
+                } else {
+                    navigate(`/${code}/game/${count}`);  
+                }
             } catch (error) {
                 console.error('Failed to connect to server:', error);
             }
         }
     }
 
-    const navigateToGame = (code, numUsers) => {
-            navigate(`/${code}/game/${numUsers}`);
+    const makeGame = async (code) => {
+        if (code) {
+            try {
+                let count = await connectToServer(code);  
+                if (count > 0){
+                    setRoomMade(true);
+                } else {
+                    const response = await createGame(code);
+                    console.log(response);
+                    navigate(`/${code}/game/${count}`);  
+                }
+            } catch (error) {
+                console.error('Failed to connect to server:', error);
+            }
+        }
     }
+
+    async function createGame(code) {
+        try {
+          const url = 'http://localhost:8080/game?roomName=' + code;
+    
+          const request = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          };
+    
+          const response = await fetch(url, request);
+          return response.text();
+        } catch (error) {
+          throw error;
+        }
+      };
+      
+
     useEffect(()=>{
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -128,17 +136,20 @@ function Waiting() {
                 <img src={title1} alt="Pegs And Jokers" />
                 {/* <h1 className="title">Pegs and Jokers</h1> */}
             </div>
-            {pressed === 'joined' ? 
+            {pressed === 'join' && roomFull && <p className='room-error-message'>That room is full.</p>}
+            {pressed === 'join' && !roomExists && <p className='room-error-message'>That room doesn't exist.</p>}
+            {pressed === 'make' && roomNotMade && <p className='room-error-message'>That room already exists.</p>}
+            {pressed === 'join' ? 
                 <div>
                     <input type="text" placeholder="Enter Game Code" ref={inputRef} />
-                    <button onClick={() => makeGame(inputRef.current.value)}>Join Game</button>                </div>
+                    <button onClick={() => joinGame(inputRef.current.value)}>Join Game</button>                </div>
                 : pressed === 'make' ?
                 <div>
                     <input type="text" placeholder="Create Game Code" ref={inputRef} />
                     <button onClick={() => makeGame(inputRef.current.value)}>Make Game</button>                </div>
                 :
                 <>
-                    <button className="button-1" onClick={() => setPressed('make')}>
+                    <button className="button-1" onClick={() => setPressed('join')}>
                         Join_Game
                     </button>
                     <button className="button-1" onClick={() => setPressed('make')}>

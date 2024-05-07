@@ -40,11 +40,8 @@ public class PegsAndJokersApplication {
         server.addEventListener("updateBoard", String.class, new DataListener<String>() {
             public void onData(SocketIOClient client, String data, AckRequest ackRequest) throws Exception {
                 System.out.println("Received board update: " + data);
-                // Extract the game code from the client's handshake data
-                String namespace = client.getHandshakeData().getSingleUrlParam("code");
                 // Broadcast the updated board data only to clients in the same game room
-                String roomName = "game_room_" + namespace;
-                server.getRoomOperations(roomName).sendEvent("updateBoardResponse", data);
+                server.getRoomOperations(data.trim()).sendEvent("updateBoardResponse", data);
             }
         });
 
@@ -53,8 +50,6 @@ public class PegsAndJokersApplication {
                 String[] parts = data.split(",");
                 String roomName = parts[0].trim();
                 String username = parts[1].trim();
-                System.out.println(roomName);
-                System.out.println(username);
                 client.set("username", username);
                 client.joinRoom(roomName);
                 System.out.println(username + " joined room " + roomName);

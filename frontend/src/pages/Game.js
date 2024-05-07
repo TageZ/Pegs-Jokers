@@ -22,46 +22,6 @@ function Game({user}) {
     const [response, setResponse] = useState('Connected to server')
     const [users, setUsers] = useState([])
     const { code } = useParams(); // This retrieves the game code from the URL
-    const game_room = code
-
-    // useEffect(() => {
-    //     // Connect to the server
-    //     const socketUrl = `http://localhost:3306/`;
-    //     const newSocket = io(socketUrl, { path: '/socket.io' });
-    //     setSocket(newSocket);
-    
-    //     // Listen for connection event
-    //     newSocket.on('connect', () => {
-    //         console.log('Connected to server');
-    //         setResponse('Connected to server');
-    //     });
-    
-    //     // Listen for disconnect event
-    //     newSocket.on('disconnect', () => {
-    //         console.log('Disconnected from server');
-    //         setResponse('Disconnected from server');
-    //     });
-
-    //     newSocket.on('moveResponse', (response) => {
-    //         console.log('Received move response:', response);
-    //         setOtherBoard(true);
-    //         setResponse('Recieved response: ' + response)
-    //     });
-
-    //     newSocket.on('getUsers', (users) => {
-    //         setUsers(users);
-    //         console.log(users)
-    //     });
-
-    //     newSocket.emit('join', `${game_room}, ${user}`);
-    //     console.log(`WebSocket: User ${user} joined room: ${game_room}`);
-    //     newSocket.emit('getUsers', `${game_room}`);
-    
-    //     // Clean up on unmount
-    //     return () => {
-    //         newSocket.disconnect();
-    //     };
-    // }, []);
 
     useEffect(() => {
         // Connect to the server
@@ -72,6 +32,7 @@ function Game({user}) {
         // Listen for connection event
         newSocket.on('connect', () => {
             console.log('Connected to server');
+            newSocket.emit('join', `${code}, username`);
             setResponse('Connected to server');
         });
     
@@ -100,7 +61,7 @@ function Game({user}) {
 
     useEffect(() => {
         if (socket) {
-            socket.emit('updateBoard', "UPDATE BOARD");
+            socket.emit('updateBoard', code);
         }
     }, [newBoard]);
 
@@ -112,8 +73,6 @@ function Game({user}) {
     useEffect(() => {
         setTurn(instance === player)
     }, [instance, player])
-
-    console.log(socket);
 
     return socket ? (
         <div className='game-page' data-testid="game-page">
@@ -135,6 +94,7 @@ function Game({user}) {
                         turn={turn}
                         otherBoard={otherBoard}
                         setOtherBoard={setOtherBoard}
+                        code = {code}
                     /> 
                 </div>
                 {turn && (
@@ -146,13 +106,12 @@ function Game({user}) {
                             setPegs={setPegs}
                             setBoard={setBoard}
                             player={player}
+                            code = {code}
                         />
                     </div>
                 )}
             </div>
-            <button>Join WebSocket Room</button>
-        <button onClick={() => printUsers()}>Print Users</button>
-    </div>
+        </div>
     ) : (
         <LoadingPage />
     );

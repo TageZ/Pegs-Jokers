@@ -10,15 +10,15 @@ public class Game {
 
     private static final int NUM_PLAYERS = 4;
     private static final int SIZE_OF_HEAVEN = 5;
-    private Integer id;
+    private String roomName;
     private Board board;
     private Player[] players;
     private Hand[] hands;
     private Deck deck;
     private int playerTurn;
 
-    public Game(Integer id){
-        this.id = id;
+    public Game(String roomName){
+        this.roomName = roomName;
         this.deck = new Deck();
         initializePlayers();
         this.board = new Board(this.players);
@@ -460,12 +460,8 @@ public class Game {
         return this.deck;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public String getRoomName(){
+        return this.roomName;
     }
 
     public Board getBoard(){
@@ -485,7 +481,7 @@ public class Game {
     @Override
     public boolean equals(Object o){
         if (!(o instanceof Game g)) return false;
-        return this.id.equals(g.getId());
+        return this.roomName.equals(g.getRoomName());
     }
 
     public int getPlayerTurn() {
