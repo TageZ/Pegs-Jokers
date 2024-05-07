@@ -29,6 +29,9 @@ public class GameService {
     public boolean takeTurn(Turn turn) {
         Game g = getGameByRoomName(turn.getRoomName());
         Player player = g.getPlayers()[g.getPlayerTurn()];
+        if (turn.getP() == null){
+            return true;
+        }
         Peg p = getPeg(turn.getP(), player);
         Peg p2 = turn.getP2();
         Card c = turn.getCard();
