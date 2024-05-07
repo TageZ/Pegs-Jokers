@@ -4,13 +4,13 @@ import '../Styling.css'
 import LoadingPage from '../pages/Loading'
 import { initializeAnalytics } from 'firebase/analytics'
 
-function Board({setPegs, pegs, newBoard, setBoard, setCards, setPlayer, user, turn, otherBoard, setOtherBoard}) {
+function Board({setPegs, pegs, newBoard, setBoard, setCards, setPlayer, user, turn, otherBoard, setOtherBoard, code}) {
 
     const [data, setData] = useState([]);
 
     async function getBoard() {
         try {
-            const response = await fetch("http://localhost:8080/board?id=1", {
+            const response = await fetch("http://localhost:8080/board?roomName=" + code, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

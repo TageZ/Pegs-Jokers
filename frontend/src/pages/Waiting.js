@@ -26,8 +26,7 @@ function Waiting() {
             setSocket(newSocket);
     
             newSocket.on('connect', () => {
-                console.log('Connected to server');
-                newSocket.emit('requestUserCount', code); // Emit event to request user count
+                newSocket.emit('requestUserCount', code); 
             });
     
             // Handle connection errors
@@ -37,8 +36,7 @@ function Waiting() {
             });
     
             newSocket.on('userCountResponse', (userCount) => {
-                console.log(`Number of users in room ${code}: ${userCount}`);
-                resolve(userCount);  // Resolve the promise with userCount
+                resolve(userCount); 
             });
 
             return () => {
@@ -84,6 +82,8 @@ function Waiting() {
                 if (count > 0){
                     setRoomMade(true);
                 } else {
+                    const response = await createGame(code);
+                    console.log(response);
                     navigate(`/${code}/game/${count}`);  
                 }
             } catch (error) {
@@ -91,6 +91,25 @@ function Waiting() {
             }
         }
     }
+
+    async function createGame(code) {
+        try {
+          const url = 'http://localhost:8080/game?roomName=' + code;
+    
+          const request = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          };
+    
+          const response = await fetch(url, request);
+          return response.text();
+        } catch (error) {
+          throw error;
+        }
+      };
+      
 
     useEffect(()=>{
         onAuthStateChanged(auth, (user) => {

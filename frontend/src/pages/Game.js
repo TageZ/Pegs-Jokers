@@ -23,7 +23,6 @@ function Game({user}) {
     const [users, setUsers] = useState([])
     const { code } = useParams(); // This retrieves the game code from the URL
 
-
     useEffect(() => {
         // Connect to the server
         const socketUrl = `http://localhost:3306/`;
@@ -75,8 +74,6 @@ function Game({user}) {
         setTurn(instance === player)
     }, [instance, player])
 
-    console.log(socket);
-
     return socket ? (
         <div className='game-page' data-testid="game-page">
             <NavBar title="Pegs & Jokers"/>
@@ -97,6 +94,7 @@ function Game({user}) {
                         turn={turn}
                         otherBoard={otherBoard}
                         setOtherBoard={setOtherBoard}
+                        code = {code}
                     /> 
                 </div>
                 {turn && (
@@ -108,13 +106,12 @@ function Game({user}) {
                             setPegs={setPegs}
                             setBoard={setBoard}
                             player={player}
+                            code = {code}
                         />
                     </div>
                 )}
             </div>
-            <button>Join WebSocket Room</button>
-        <button onClick={() => printUsers()}>Print Users</button>
-    </div>
+        </div>
     ) : (
         <LoadingPage />
     );

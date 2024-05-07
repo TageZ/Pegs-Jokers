@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import '../Styling.css'
 
-export function SideBar({pegs, card, setPegs, setCard, setBoard, player}) {
+export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) {
 
   const [splitMove, setSplitMove] = useState(false);
   const value = card ? card.value : 'No Card Selected';
@@ -49,7 +49,7 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player}) {
             "color": pegs[0].color,
             "num": pegs[0].num
           },
-          "gameID": 1
+          "roomName": code
         } : !splitMove ?
         {
           "card": {

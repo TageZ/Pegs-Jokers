@@ -14,15 +14,11 @@ public class GameService {
 
     public GameService(){
         this.gameList = new ArrayList<>();
-
-        Game game = new Game(1);
-
-        this.gameList.add(game);
     }
-    public Optional<Game> getGame(Integer id) {
+    public Optional<Game> getGame(String roomName) {
         Optional<Game> optional = Optional.empty();
         for (Game game : this.gameList){
-            if (id.equals(game.getId())){
+            if (roomName.equals(game.getRoomName())){
                 optional = Optional.of(game);
                 return optional;
             }
@@ -31,7 +27,7 @@ public class GameService {
     }
 
     public boolean takeTurn(Turn turn) {
-        Game g = getGameByID(turn.getGameID());
+        Game g = getGameByRoomName(turn.getRoomName());
         Player player = g.getPlayers()[g.getPlayerTurn()];
         Peg p = getPeg(turn.getP(), player);
         Peg p2 = turn.getP2();
@@ -65,25 +61,14 @@ public class GameService {
         return false;
     }
 
-    public Integer createGame(){
-        Integer id = gameList.size();
-        Game g = new Game(id);
+    public void createGame(String roomName){
+        Game g = new Game(roomName);
         gameList.add(g);
-        return id;
     }
 
-    public Turn getTurn(){
-        Card c = new Card(Value.NINE);
-        Peg p = new Peg();
-        Peg p2 = null;
-        Integer gameId = 1;
-        int spaces = 0;
-        return new Turn(c, p, p2, gameId, spaces);
-    }
-
-    public Game getGameByID(Integer id){
+    public Game getGameByRoomName(String roomName){
         for (Game g : this.gameList){
-            if (g.getId().equals(id)){
+            if (g.getRoomName().equals(roomName)){
                 return g;
             }
         }
@@ -91,7 +76,7 @@ public class GameService {
     }
 
     public boolean updateCard(Turn turn){
-        Game g = getGameByID(turn.getGameID());
+        Game g = getGameByRoomName(turn.getRoomName());
         Hand hand = g.getHands()[g.getPlayerTurn()];
         Card[] cards = hand.getCards();
         for (int i = 0; i < cards.length; i++){
@@ -127,13 +112,13 @@ public class GameService {
         };
     }
 
-    public boolean isWinner(Integer gameID){
-        Game g = getGameByID(gameID);
+    public boolean isWinner(String roomName){
+        Game g = getGameByRoomName(roomName);
         return g != null && g.isWinner();
     }
 
-    public void incrementPlayerTurn(Integer gameID){
-        Game g = getGameByID(gameID);
+    public void incrementPlayerTurn(String roomName){
+        Game g = getGameByRoomName(roomName);
         g.updatePlayerTurn();
     }
 }
