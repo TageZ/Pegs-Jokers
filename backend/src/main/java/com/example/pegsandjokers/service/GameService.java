@@ -36,6 +36,7 @@ public class GameService {
         Peg p2 = turn.getP2();
         Card c = turn.getCard();
         int spaces = turn.getSpaces();
+        boolean forward = turn.isForward();
 
         if (p == null){
             return false;
@@ -50,7 +51,7 @@ public class GameService {
                 }
                 return g.kill(p, p2);
             } else if (c.getValue().equals(Value.SEVEN) || c.getValue().equals(Value.NINE)) {
-                return g.splitMove(p, p2, c, spaces);
+                return g.splitMove(p, p2, c, spaces, forward);
             }
         } else if (p.getInHome()) {
             if (!(c.getValue().equals(Value.JOKER) || c.getValue().equals(Value.ACE) || c.getValue().equals(Value.JACK) || c.getValue().equals(Value.KING) || c.getValue().equals(Value.QUEEN))){

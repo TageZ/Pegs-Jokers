@@ -185,7 +185,7 @@ function Board({setPegs, pegs, newBoard, setBoard, setCards, setPlayer, user, tu
                 })}
         </div>
         setGrid(newGrid)
-    }, [data, turn])
+    }, [data, turn, pegs])
 
     useEffect(() => {
         getBoard();

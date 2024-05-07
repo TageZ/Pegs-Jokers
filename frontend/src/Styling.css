@@ -70,6 +70,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
 }
 
 .player-selection p{
@@ -129,6 +130,20 @@
 .room-error-message {
   color: white;
   font: bold;
+}
+
+.cant-confirm-turn {
+  text-align: center;
+  font-weight: bold;
+  height: 50px;
+  line-height: 50px;
+  background-color: white;
+  transition: background-color 0.3s ease;
+}
+
+.cant-confirm-turn:hover {
+  background-color: gray;
+  user-select: none;
 }
 
 .confirm-turn {

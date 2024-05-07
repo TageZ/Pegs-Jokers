@@ -50,7 +50,6 @@ function Game({user}) {
 
         newSocket.on('getUsers', (users) => {
             setUsers(users);
-            console.log(users)
         });
         
         // Clean up on unmount
@@ -65,14 +64,10 @@ function Game({user}) {
         }
     }, [newBoard]);
 
-
-    const printUsers = () => {
-        console.log(users)
-    }
-
     useEffect(() => {
         setTurn(instance === player)
     }, [instance, player])
+
 
     return socket ? (
         <div className='game-page' data-testid="game-page">
