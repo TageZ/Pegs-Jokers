@@ -1,22 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import '../Styling.css'
 
 export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) {
 
   const [splitMove, setSplitMove] = useState(false);
+  const [spaces, setSpaces] = useState(null);
+  const inputRef = useRef(null);
   const value = card ? card.value : 'No Card Selected';
 
 
   return (
       <div className='turn-bar'>
-          <h1 className='turn-header'>Play a move, {player}!</h1>
+          <h1 className='turn-header'>Player {player}, it's your turn!</h1>
           {pegs.map((peg, index) => (
               <div key={index} className='selected-peg'>
                   Peg {index+1}: {peg.color} {peg.num}
               </div>
           ))}
           <p className='selected-card'>{value}</p>
-          <div onClick={setSplitMove} className='split-move'>Is this a split move?</div>
+          {!(value === 'SEVEN' || value === 'NINE') ? (
+            <></>
+          ) : spaces ? (
+            <p className='selected-card'>Split Move Spaces: {spaces}</p>
+          ) : !splitMove ? (
+            <div onClick={setSplitMove} className='split-move'>Making a Split Move?</div>
+          ) : (
+            <div className='split-spaces'>
+            <input type="text" placeholder="Enter Split Move Spaces" ref={inputRef} />
+            <div onClick={() => setSpaces(inputRef.current.value)} className='confirm-turn'>Confirm Spaces</div>
+            </div>
+          )}
           {card != null && pegs.length === 0 ? (
             <div onClick={handleConfirmTurn} className='confirm-turn'>Discard Card?</div>
           ) : (
@@ -72,7 +85,7 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) 
               "color": pegs[1].color,
               "num": pegs[1].num
             },
-          "gameID": 1
+            "roomName": code
         } :
         {
           "card": {
@@ -86,14 +99,16 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) 
               "color": pegs[1].color,
               "num": pegs[1].num
             },
-          "gameID": 1,
-          "spaces": 3
+          "roomName": code,
+          "spaces": spaces
         };
       
       await postTurn(turn);
   
       setCard();
       setPegs([]);
+      setSplitMove(false);
+      setSpaces();
       setBoard(true);
   };
 }
