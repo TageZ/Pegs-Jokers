@@ -17,7 +17,11 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) 
           ))}
           <p className='selected-card'>{value}</p>
           <div onClick={setSplitMove} className='split-move'>Is this a split move?</div>
-          <div onClick={handleConfirmTurn} className='confirm-turn'>Confirm Turn</div>
+          {card != null && pegs.length === 0 ? (
+            <div onClick={handleConfirmTurn} className='confirm-turn'>Discard Card?</div>
+          ) : (
+            <div onClick={handleConfirmTurn} className='confirm-turn'>Confirm Turn</div>
+          )}
       </div>
   )
 
@@ -41,7 +45,12 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) 
   };
 
   async function handleConfirmTurn(){
-      const turn = !pegs[1] ? {
+      const turn = pegs.length == 0 ? {
+        "card": {
+          "value": card.value
+        },
+        "roomName": code
+      } : !pegs[1] ? {
           "card": {
             "value": card.value
           },
