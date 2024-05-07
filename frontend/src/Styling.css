@@ -68,6 +68,11 @@
   cursor: pointer;
 }
 
+.room-error-message {
+  color: white;
+  font: bold;
+}
+
 .confirm-turn {
   text-align: center;
   font-weight: bold;
