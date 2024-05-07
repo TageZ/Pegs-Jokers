@@ -131,29 +131,27 @@ function Waiting() {
 
     return (
         <div className='home-page'>
-            {/* <div>hello</div> */}
             <div className="home-title">
                 <img src={title1} alt="Pegs And Jokers" />
-                {/* <h1 className="title">Pegs and Jokers</h1> */}
             </div>
             {pressed === 'join' && roomFull && <p className='room-error-message'>That room is full.</p>}
             {pressed === 'join' && !roomExists && <p className='room-error-message'>That room doesn't exist.</p>}
             {pressed === 'make' && roomNotMade && <p className='room-error-message'>That room already exists.</p>}
             {pressed === 'join' ? 
-                <div>
+                <div className='stack'>
                     <input type="text" placeholder="Enter Game Code" ref={inputRef} />
-                    <button onClick={() => joinGame(inputRef.current.value)}>Join Game</button>                </div>
+                    <button className="button-1" onClick={() => joinGame(inputRef.current.value)}>Join Game</button></div>
                 : pressed === 'make' ?
-                <div>
+                <div className='stack'>
                     <input type="text" placeholder="Create Game Code" ref={inputRef} />
-                    <button onClick={() => makeGame(inputRef.current.value)}>Make Game</button>                </div>
+                    <button className="button-1" onClick={() => makeGame(inputRef.current.value)}>Make Game</button></div>
                 :
                 <>
                     <button className="button-1" onClick={() => setPressed('join')}>
-                        Join_Game
+                        Join Game
                     </button>
                     <button className="button-1" onClick={() => setPressed('make')}>
-                        Make_Game
+                        Make Game
                     </button>
                 </>
             }
