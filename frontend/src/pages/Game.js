@@ -97,7 +97,7 @@ function Game({user}) {
                         code = {code}
                     /> 
                 </div>
-                {turn && (
+                {turn ? (
                     <div className='side-bar'>
                         <SideBar
                             pegs={pegs}
@@ -109,6 +109,8 @@ function Game({user}) {
                             code = {code}
                         />
                     </div>
+                ) : (
+                    <div className='turn-bar'></div>
                 )}
             </div>
         </div>

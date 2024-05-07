@@ -18,6 +18,7 @@ function Waiting() {
     const [roomFull, setRoomFull] = useState(false);
     const [roomExists, setRoomExists] = useState(true);
     const [roomNotMade, setRoomMade] = useState(false);
+    const [connectionError, setConnectionError] = useState(false);
 
     const connectToServer = (code) => {
         return new Promise((resolve, reject) => {
@@ -55,6 +56,14 @@ function Waiting() {
         });
     }
 
+    const handleBack = () => {
+        setPressed('');
+        setRoomFull(false);
+        setRoomExists(true);
+        setRoomMade(false);
+        setConnectionError(false);
+    }
+
     const joinGame = async (code) => {
         if (code) {
             try {
@@ -71,6 +80,7 @@ function Waiting() {
                 }
             } catch (error) {
                 console.error('Failed to connect to server:', error);
+                setConnectionError(true);
             }
         }
     }
@@ -88,6 +98,7 @@ function Waiting() {
                 }
             } catch (error) {
                 console.error('Failed to connect to server:', error);
+                setConnectionError(true);
             }
         }
     }
@@ -137,6 +148,7 @@ function Waiting() {
             {pressed === 'join' && roomFull && <p className='room-error-message'>That room is full.</p>}
             {pressed === 'join' && !roomExists && <p className='room-error-message'>That room doesn't exist.</p>}
             {pressed === 'make' && roomNotMade && <p className='room-error-message'>That room already exists.</p>}
+            {connectionError && <p className='room-error-message'>There was an error connecting to that room.</p>}
             {pressed === 'join' ? 
                 <div className='stack'>
                     <input type="text" placeholder="Enter Game Code" ref={inputRef} />
@@ -155,6 +167,9 @@ function Waiting() {
                     </button>
                 </>
             }
+            {pressed && <button className="button-1" onClick={handleBack}>
+                Back
+            </button>}
             <button className="button-1" onClick={handleLogout}>
                 Logout
             </button>

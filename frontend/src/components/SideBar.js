@@ -11,17 +11,17 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) 
 
   return (
       <div className='turn-bar'>
-          <h1 className='turn-header'>Player {player}, it's your turn!</h1>
+          <div className='turn-header'><p>It's your turn!</p></div>
           {pegs.map((peg, index) => (
-              <div key={index} className='selected-peg'>
+              <div key={index} className='player-selection'><p>
                   Peg {index+1}: {peg.color} {peg.num}
-              </div>
+              </p></div>
           ))}
-          <p className='selected-card'>{value}</p>
+          <div className='player-selection'><p>{value}</p></div>
           {!(value === 'SEVEN' || value === 'NINE') ? (
             <></>
           ) : spaces ? (
-            <p className='selected-card'>Split Move Spaces: {spaces}</p>
+            <div className='player-selection'><p>Split Move Spaces: {spaces}</p></div>
           ) : !splitMove ? (
             <div onClick={setSplitMove} className='split-move'>Making a Split Move?</div>
           ) : (
