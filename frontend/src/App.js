@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route index element={<Landing />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:id" element={<Profile />} />
           <Route path="/waiting" element={<Waiting />} />
           <Route path="/:code/game/0" element={<Game user={0}/>} />
           <Route path="/:code/game/1" element={<Game user={1}/>} />
