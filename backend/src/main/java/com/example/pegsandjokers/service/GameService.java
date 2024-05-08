@@ -40,6 +40,11 @@ public class GameService {
 
         if (p == null){
             return false;
+        } else if (p.getInHome()) {
+            if (!(c.getValue().equals(Value.JOKER) || c.getValue().equals(Value.ACE) || c.getValue().equals(Value.JACK) || c.getValue().equals(Value.KING) || c.getValue().equals(Value.QUEEN))){
+                return false;
+            }
+            return g.getOut(p);
         } else if (p2 != null){
             Player player2 = g.getPlayers()[getNumPlayerFromColor(p2.getColor())];
             p2 = getPeg(turn.getP2(), player2);
@@ -53,11 +58,6 @@ public class GameService {
             } else if (c.getValue().equals(Value.SEVEN) || c.getValue().equals(Value.NINE)) {
                 return g.splitMove(p, p2, c, spaces, forward);
             }
-        } else if (p.getInHome()) {
-            if (!(c.getValue().equals(Value.JOKER) || c.getValue().equals(Value.ACE) || c.getValue().equals(Value.JACK) || c.getValue().equals(Value.KING) || c.getValue().equals(Value.QUEEN))){
-                return false;
-            }
-            return g.getOut(p);
         }
         else {
             return g.move(p, c);
