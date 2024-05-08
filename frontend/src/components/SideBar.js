@@ -41,7 +41,7 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) 
 
           {card != null && pegs.length === 0 ? (
             <div onClick={handleConfirmTurn} className='confirm-turn'>Discard Card?</div>
-          ) : card == null || pegs.length === 0 ? (
+          ) : card == null ? (
             <div className='cant-confirm-turn'>Confirm Turn</div>
           ) : (
             <div onClick={handleConfirmTurn} className='confirm-turn'>Confirm Turn</div>
@@ -70,7 +70,6 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) 
 
   async function handleConfirmTurn(){
       const forward = direction == 'forward' || !direction;
-      console.log(forward);
 
       const turn = pegs.length == 0 ? {
         "card": {

@@ -215,48 +215,27 @@ public class Game {
 
         //If first move is successful
         if (h1 != null) {
-            //If the first move took the peg onto the other peg
-            if (h1.equals(peg2.getHole())) {
-                //Get the original hole for if a reversion is needed
-                Hole og1 = peg1.getHole();
-                //Add the peg to the hole
-                this.addPegToHole(peg1, h1);
+            //Get the original hole for if a reversion is needed
+            Hole og1 = peg1.getHole();
+            //Add the peg to the hole
+            this.addPegToHole(peg1, h1);
 
-                //Determine h2
-                if (value.equals(Value.SEVEN)) {
-                    h2 = processMove(peg2, value.ordinal() + 1 - spaces, true);
-                } else {
-                    h2 = processMove(peg2, value.ordinal() + 1 - spaces, !forward);
-                }
-
-                if (h2 != null) {
-                    //If h2 isn't null, success.
-                    //Move the second peg
-                    this.addPegToHole(peg2, h2);
-                    return true;
-                } else {
-                    //Otherwise, revert original move.
-                    this.addPegToHole(peg1, og1);
-                    this.addPegToHole(peg2, h1);
-                    return false;
-                }
+            //Determine h2
+            if (value.equals(Value.SEVEN)) {
+                h2 = processMove(peg2, value.ordinal() + 1 - spaces, true);
             } else {
-                //Move wasn't on other peg.
+                h2 = processMove(peg2, value.ordinal() + 1 - spaces, !forward);
+            }
 
-                //Determine h2.
-                if (value.equals(Value.SEVEN)) {
-                    h2 = processMove(peg2, value.ordinal() + 1 - spaces, true);
-                } else {
-                    h2 = processMove(peg2, value.ordinal() + 1 - spaces, !forward);
-                }
-
-                //Check if the both pegs can be moved as desired.
-                if (h2 != null) {
-                    //Success
-                    this.addPegToHole(peg1, h1);
-                    this.addPegToHole(peg2, h2);
-                    return true;
-                }
+            if (h2 != null) {
+                //If h2 isn't null, success.
+                //Move the second peg
+                this.addPegToHole(peg2, h2);
+                return true;
+            } else {
+                //Otherwise, revert original move.
+                this.addPegToHole(peg1, og1);
+                this.addPegToHole(peg2, h1);
                 return false;
             }
         }
