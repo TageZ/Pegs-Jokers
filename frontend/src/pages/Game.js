@@ -7,6 +7,7 @@ import { Hand } from '../components/Hand';
 import io from 'socket.io-client';
 import '../Styling.css'
 import { useParams } from 'react-router-dom';
+import WinScreen from '../components/WinScreen';
 
 
 function Game({user}) {
@@ -17,6 +18,7 @@ function Game({user}) {
     const [player, setPlayer] = useState()
     const [newBoard, setBoard] = useState(true)
     const [otherBoard, setOtherBoard] = useState(true)
+    const [winner, setWinner] = useState(false);
     const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
     const [response, setResponse] = useState('Connected to server')
@@ -69,6 +71,9 @@ function Game({user}) {
     }, [instance, player])
 
 
+    // return winner === true ? (
+    //     <WinScreen player={player}/>
+    // ) : socket ? (
     return socket ? (
         <div className='game-page' data-testid="game-page">
             <NavBar title="Pegs & Jokers"/>
@@ -102,6 +107,7 @@ function Game({user}) {
                             setBoard={setBoard}
                             player={player}
                             code = {code}
+                            setWinner={setWinner}
                         />
                     </div>
                 ) : (

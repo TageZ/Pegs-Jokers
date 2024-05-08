@@ -40,8 +40,8 @@ public class GameService {
 
         if (p == null){
             return false;
-        } else if (p.getInHome()) {
-            if (!(c.getValue().equals(Value.JOKER) || c.getValue().equals(Value.ACE) || c.getValue().equals(Value.JACK) || c.getValue().equals(Value.KING) || c.getValue().equals(Value.QUEEN))){
+        } else if (p.getInHome() && !c.getValue().equals(Value.JOKER)) {
+            if (!(c.getValue().equals(Value.ACE) || c.getValue().equals(Value.JACK) || c.getValue().equals(Value.KING) || c.getValue().equals(Value.QUEEN))){
                 return false;
             }
             return g.getOut(p);
@@ -119,6 +119,26 @@ public class GameService {
     public boolean isWinner(String roomName){
         Game g = getGameByRoomName(roomName);
         return g != null && g.isWinner();
+    }
+
+    public boolean sendPieceToHeaven(int playerNum) {
+        Game g = getGameByRoomName("test");
+        Player p = g.getPlayers()[playerNum];
+        Peg peg;
+        int numPeg = 0;
+        do {
+            peg = p.getPegs().get(numPeg);
+            numPeg++;
+        } while (peg.getInHome() != true && numPeg < 5);
+        boolean success = g.getOut(peg);
+        if(!g.sendToHeavensGate(peg)) success = false;
+        int spaces = 5 - p.getPegsInHeaven();
+        Hole h = g.processMove(peg, spaces, true);
+        if (h != null){
+            g.addPegToHole(peg, h);
+            return true;
+        }
+        return false;
     }
 
     public void incrementPlayerTurn(String roomName){

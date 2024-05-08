@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import '../Styling.css'
 
-export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) {
+export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code, setWinner}) {
 
   const [splitMove, setSplitMove] = useState(false);
   const [spaces, setSpaces] = useState(null);
@@ -61,8 +61,12 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) 
         body: JSON.stringify(turn)
       };
 
-      const response = await fetch(url, request);
-      console.log(response.text());
+      const res = await fetch(url, request);
+      const data = await res.text();
+      if (data === 'Game Over!'){
+        setWinner(true);
+      }
+      
     } catch (error) {
       console.error('Error:', error);
     }
@@ -118,11 +122,12 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) 
         };
       
       await postTurn(turn);
-  
+
       setCard();
       setPegs([]);
       setSplitMove(false);
       setSpaces();
       setBoard(true);
+      setDirection();
   };
 }

@@ -32,6 +32,15 @@ public class GameController {
         return (Game) game.orElse(null);
     }
 
+    @PostMapping("/sendPieceToHeaven")
+    public ResponseEntity<?> sendPieceToHeaven(@RequestParam int playerNum){
+        boolean success = gameService.sendPieceToHeaven(playerNum);
+        if (success){
+            return ResponseEntity.ok().body("Sent Piece to Heaven!");
+        }
+        return ResponseEntity.badRequest().body("Failed to Send Piece To Heaven!");
+    }
+
     @PostMapping("/game")
     public ResponseEntity<?> makeNewGame(@RequestParam String roomName){
         gameService.createGame(roomName);
