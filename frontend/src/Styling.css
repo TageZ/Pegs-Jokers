@@ -221,16 +221,34 @@
   display: flex;
   min-height: 100vh;
   align-items: center;
-  flex-direction: column;
+  flex-direction: row;
   background-color: #312e2b;
+  justify-content: space-between;
+  overflow: hidden;
 }
 
 .title-container {
   display: flex;
   flex-direction: column;
-  padding: 120px 100px;
 }
 
+.king{
+  width: 27rem;
+  margin-left: 10rem;
+  margin-top: -7rem;
+
+}
+
+.title-options-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rem;
+  margin-right: 9rem;
+  margin-top: -5rem;
+  
+}
 .home-title {
   display: flex;
   flex-direction: column;
@@ -261,7 +279,7 @@
 /* CSS */
 .button-1 {
   background-color: #ed545c;
-  border-radius: 8px;
+  border-radius: 1rem;
   border-style: solid;
   border-width: 5px;
   border-color: black;
@@ -281,7 +299,7 @@
   /* position: relative; */
   text-align: center;
   text-decoration: none;
-  transition: color 100ms;
+  transition: all 100ms;
   vertical-align: baseline;
   user-select: none;
   -webkit-user-select: none;
@@ -341,9 +359,10 @@ input[type="text"] {
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 1rem;
   cursor: pointer;
   text-decoration: none;
+
 }
 
 .button-3 {
@@ -354,7 +373,7 @@ input[type="text"] {
   background-color: #007bff;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 1rem;
   cursor: pointer;
   text-decoration: none;
 }
@@ -507,3 +526,5 @@ input[type="text"] {
   margin-top: 5%;
   font-size: xx-large;
 }
+
+
