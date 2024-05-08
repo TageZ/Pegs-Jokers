@@ -67,6 +67,12 @@ public class Hole {
 
     @Override
     public String toString(){
-        return "Hole id: " + this.id;
+        return "Hole id: " + this.id + ", Peg: " + this.peg;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (!(o instanceof Hole h)) return false;
+        return this.id.equals(h.getId());
     }
 }

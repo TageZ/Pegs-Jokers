@@ -1,90 +1,120 @@
 import React, {useState, useEffect} from 'react'
-import {Outlet, Link} from 'react-router-dom'
 import Board from '../components/Board'
 import NavBar from '../components/NavBar'
-import holesData from '../exampleBoard.json';
-import '../Styling.css'
-import KnownCard from '../components/KnownCard';
+import LoadingPage from '../pages/Loading';
+import { SideBar } from '../components/SideBar';
+import { Hand } from '../components/Hand';
 import io from 'socket.io-client';
+import '../Styling.css'
+import { useParams } from 'react-router-dom';
 
 
-function Game() {
+function Game({user}) {
+    const instance = {user}.user;
+    const [pegs, setPegs] = useState([])
+    const [card, setCard] = useState()
+    const [cards, setCards] = useState([])
+    const [player, setPlayer] = useState()
+    const [newBoard, setBoard] = useState(true)
+    const [otherBoard, setOtherBoard] = useState(true)
+    const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
-    const [moveInput, setMoveInput] = useState('');
+    const [response, setResponse] = useState('Connected to server')
+    const [users, setUsers] = useState([])
+    const { code } = useParams(); // This retrieves the game code from the URL
 
     useEffect(() => {
         // Connect to the server
-        const newSocket = io('http://localhost:3306', { path: '/game/socket.io' });
+        const socketUrl = `http://localhost:3306/`;
+        const newSocket = io(socketUrl, { path: '/socket.io' });
         setSocket(newSocket);
     
         // Listen for connection event
         newSocket.on('connect', () => {
             console.log('Connected to server');
+            newSocket.emit('join', `${code}, username`);
+            setResponse('Connected to server');
         });
     
         // Listen for disconnect event
         newSocket.on('disconnect', () => {
             console.log('Disconnected from server');
+            setResponse('Disconnected from server');
         });
 
-        newSocket.on('moveResponse', (response) => {
+        newSocket.on('updateBoardResponse', (response) => {
             console.log('Received move response:', response);
-            // Handle the response here, such as updating the UI
+            setOtherBoard(true);
+            setResponse('Received response: ' + response)
         });
-    
+
+        newSocket.on('getUsers', (users) => {
+            setUsers(users);
+            console.log(users)
+        });
+        
         // Clean up on unmount
         return () => {
             newSocket.disconnect();
         };
     }, []);
-    
-    const sendMove = (moveData) => {
+
+    useEffect(() => {
         if (socket) {
-            socket.emit('move', moveData);
+            socket.emit('updateBoard', code);
         }
-    };
-
-    const handleInputChange = (event) => {
-        setMoveInput(event.target.value);
-    };
-
-    const handleSendMove = () => {
-        sendMove(moveInput);
-        setMoveInput(''); // Clear the input after sending
-    };
+    }, [newBoard]);
 
 
-    return (
-        <div className='game-page'>
-        <NavBar title = "Pegs & Jokers"/>
-            <div className='board-container'>
-                <div className='leftBar'>
-                    <div className='card-container'>
-                        <KnownCard card={'2C'} />
-                        <KnownCard card={'7H'}/>  
-                        <KnownCard card={'JD'}/>                    
-                        <KnownCard card={'AS'}/>                    
-                        <KnownCard card={'BJ'}/>                    
-                    </div>
-                    <div className='playerContainer'>
-                        <button className="button-2">Move</button>
-                        Hypothetical Players Turn or Other Info Btw the button don't work
-                    </div>
+    const printUsers = () => {
+        console.log(users)
+    }
+
+    useEffect(() => {
+        setTurn(instance === player)
+    }, [instance, player])
+
+    return socket ? (
+        <div className='game-page' data-testid="game-page">
+            <NavBar title="Pegs & Jokers"/>
+            <div className='game'>
+                <div className='hand-section'>
+                    <Hand setCard={setCard} hand={cards}/>
                 </div>
                 <div className='game-body'>
-                    {/* <Board /> */}
-                    <Board />
+                    <Board
+                        setCard={setCard}
+                        setPegs={setPegs}
+                        pegs={pegs}
+                        newBoard={newBoard}
+                        setBoard={setBoard}
+                        setCards={setCards}
+                        setPlayer={setPlayer}
+                        user={instance}
+                        turn={turn}
+                        otherBoard={otherBoard}
+                        setOtherBoard={setOtherBoard}
+                        code = {code}
+                    /> 
                 </div>
-                <div className='rightBar'>
-                    <div className='rightPlaceholder'>
-                        Please keep these placeholders here
-                        <input type="text" value={moveInput} onChange={handleInputChange} />
-                        <button onClick={handleSendMove}>Send to Socket</button>
+                {turn && (
+                    <div className='side-bar'>
+                        <SideBar
+                            pegs={pegs}
+                            card={card}
+                            setCard={setCard}
+                            setPegs={setPegs}
+                            setBoard={setBoard}
+                            player={player}
+                            code = {code}
+                        />
                     </div>
-                </div>
+                )}
             </div>
         </div>
-    )
+    ) : (
+        <LoadingPage />
+    );
 }
 
 export default Game

@@ -6,6 +6,7 @@ import NavBar from '../components/NavBar'
 import { auth } from '../firebase';
 import { onAuthStateChanged, signOut} from "firebase/auth";
 import UserProfile from '../components/UserProfile';
+import {useParams} from 'react-router-dom'
 
 
 

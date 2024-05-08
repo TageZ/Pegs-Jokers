@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import '../Styling.css'
 
-function Place({ position = null, piece = null, pathColor=null}) {
+function Place({ position = null, piece = null, pathColor=null, setPegs, turn}) {
 
     const [hole, setHole] = useState(); // Initialize color state with an empty string
     const [background, setBackground] = useState(pathColor == null ? '#444444' : pathColor)
+
+    const brown = '#61483e';
+    const tan = '#dfb289';
 
     useEffect(() => {
         // Check if the position is 'path' and the piece is null to set the color to black
@@ -16,33 +20,7 @@ function Place({ position = null, piece = null, pathColor=null}) {
                 display: 'inline-block'
             });
         } 
-        else if ((position == 'start' || position == 'end') && piece != null) { // If there is a piece, set the color to the piece's color
-            setHole({
-                background: piece.color,
-                height: '15px',
-                width: '15px',
-                borderRadius: '50%',
-                display: 'inline-block'
-            });
-        }else if (position == 'start'){
-            setHole({
-                background: 'black',
-                height: '10px',
-                width: '10px',
-                borderRadius: '50%',
-                display: 'inline-block'
-            }); 
-        }
-        else if (position == 'end') { // If there is a piece, set the color to the piece's color
-            setHole({
-                background: 'black',
-                height: '10px',
-                width: '10px',
-                borderRadius: '50%',
-                display: 'inline-block'
-            });
-        }
-        else if (piece !== null) { // If there is a piece, set the color to the piece's color
+        else if (piece != null) {
             setHole({
                 background: piece.color,
                 height: '15px',
@@ -61,10 +39,16 @@ function Place({ position = null, piece = null, pathColor=null}) {
         }
     }, [piece]); // Watch for changes in position and piece props
 
+    const handlePegClick = () => {
+        if (turn && piece) {
+            setPegs(pegs => pegs ? [...pegs, piece] : [piece]);
+        }
+    };
+
     return (
         <div className="grid-item">
-            <div style={{background: background}} className='place-outline'>
-                <div style={hole}></div>
+            <div className='place-outline' style={{ background: background }}>
+                <div onClick={handlePegClick} style={hole} className={turn ? (piece ? (background === tan ? 'zoom-on-hover-dark' : 'zoom-on-hover-light') : '') : ''}></div>
             </div>
         </div>
     );

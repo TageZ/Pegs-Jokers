@@ -1,0 +1,114 @@
+import React, { useEffect, useState, useRef } from 'react'
+import '../Styling.css'
+
+export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code}) {
+
+  const [splitMove, setSplitMove] = useState(false);
+  const [spaces, setSpaces] = useState(null);
+  const inputRef = useRef(null);
+  const value = card ? card.value : 'No Card Selected';
+
+
+  return (
+      <div className='turn-bar'>
+          <h1 className='turn-header'>Player {player}, it's your turn!</h1>
+          {pegs.map((peg, index) => (
+              <div key={index} className='selected-peg'>
+                  Peg {index+1}: {peg.color} {peg.num}
+              </div>
+          ))}
+          <p className='selected-card'>{value}</p>
+          {!(value === 'SEVEN' || value === 'NINE') ? (
+            <></>
+          ) : spaces ? (
+            <p className='selected-card'>Split Move Spaces: {spaces}</p>
+          ) : !splitMove ? (
+            <div onClick={setSplitMove} className='split-move'>Making a Split Move?</div>
+          ) : (
+            <div className='split-spaces'>
+            <input type="text" placeholder="Enter Split Move Spaces" ref={inputRef} />
+            <div onClick={() => setSpaces(inputRef.current.value)} className='confirm-turn'>Confirm Spaces</div>
+            </div>
+          )}
+          {card != null && pegs.length === 0 ? (
+            <div onClick={handleConfirmTurn} className='confirm-turn'>Discard Card?</div>
+          ) : (
+            <div onClick={handleConfirmTurn} className='confirm-turn'>Confirm Turn</div>
+          )}
+      </div>
+  )
+
+  async function postTurn(turn) {
+    try {
+      const url = 'http://localhost:8080/play/turn';
+
+      const request = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(turn)
+      };
+
+      const response = await fetch(url, request);
+      console.log(response.text());
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  async function handleConfirmTurn(){
+      const turn = pegs.length == 0 ? {
+        "card": {
+          "value": card.value
+        },
+        "roomName": code
+      } : !pegs[1] ? {
+          "card": {
+            "value": card.value
+          },
+          "p": {
+            "color": pegs[0].color,
+            "num": pegs[0].num
+          },
+          "roomName": code
+        } : !splitMove ?
+        {
+          "card": {
+              "value": card.value
+          },
+          "p": {
+              "color": pegs[0].color,
+              "num": pegs[0].num
+          },
+          "p2": {
+              "color": pegs[1].color,
+              "num": pegs[1].num
+            },
+            "roomName": code
+        } :
+        {
+          "card": {
+              "value": card.value
+          },
+          "p": {
+              "color": pegs[0].color,
+              "num": pegs[0].num
+          },
+          "p2": {
+              "color": pegs[1].color,
+              "num": pegs[1].num
+            },
+          "roomName": code,
+          "spaces": spaces
+        };
+      
+      await postTurn(turn);
+  
+      setCard();
+      setPegs([]);
+      setSplitMove(false);
+      setSpaces();
+      setBoard(true);
+  };
+}

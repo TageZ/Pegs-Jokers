@@ -9,37 +9,49 @@ import java.util.Objects;
 public class Game {
 
     private static final int NUM_PLAYERS = 4;
-    private Integer id;
+    private static final int SIZE_OF_HEAVEN = 5;
+    private String roomName;
     private Board board;
     private Player[] players;
+    private Hand[] hands;
     private Deck deck;
+    private int playerTurn;
 
-    public Game(Integer id){
-        this.id = id;
+    public Game(String roomName){
+        this.roomName = roomName;
+        this.deck = new Deck();
         initializePlayers();
         this.board = new Board(this.players);
-        this.deck = new Deck();
+        initializeHands();
+        this.playerTurn = 0;
     }
 
-    public void initializePlayers(){
+    public void initializePlayers() {
         this.players = new Player[NUM_PLAYERS];
-        for (int i = 0; i < NUM_PLAYERS; i++){
+        for (int i = 0; i < NUM_PLAYERS; i++) {
             String color = getPlayerColor(i);
-            this.players[i] = new Player(i, color);
+            this.players[i] = new Player(i, color, this.deck);
             ArrayList<Peg> pegs = new ArrayList<>();
-            for (int j = 0; j < 5; j++){
+            for (int j = 0; j < 5; j++) {
                 Peg p = new Peg(color, j, this.players[i]);
                 pegs.add(p);
             }
             this.players[i].setPegs(pegs);
         }
 
-        for (int i = 0; i < NUM_PLAYERS; i++){
-            if (i < NUM_PLAYERS / 2){
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+            if (i < NUM_PLAYERS / 2) {
                 this.players[i].setPartner(this.players[i + NUM_PLAYERS / 2]);
             } else {
                 this.players[i].setPartner(this.players[i - NUM_PLAYERS / 2]);
             }
+        }
+    }
+
+    public void initializeHands(){
+        this.hands = new Hand[this.players.length];
+        for (int i = 0; i < this.hands.length; i++){
+            this.hands[i] = this.players[i].getHand();
         }
     }
 
@@ -79,20 +91,27 @@ public class Game {
      * @return - The hole the peg is wanting to move to if valid, otherwise null.
      */
     public Hole processMove(Peg peg, int spaces, boolean forward) {
+        if (peg.getInHeaven()){
+            //TODO ADD index out of bounds catch of some kind
+            return moveInHeaven(peg, spaces);
+        }
         Hole[] loop = this.board.getLoop();
         Hole current = peg.getHole();
-        int index = this.board.getHoleIndex(current.getId());
+        int index = this.board.getHoleIndex(current);
         Player p = peg.getPlayer();
         int count = 0;
 
         while (count < spaces) {
+            if (current.equals(peg.getPlayer().getHeavensGate()) && (spaces-count) <= SIZE_OF_HEAVEN && forward) {
+                return processHeaven(peg, spaces-count);
+            }
+
             if (forward) {
                 index = (index + 1) % loop.length;
-                current = loop[index];
             } else {
                 index = (index == 0) ? (loop.length - 1) : (index - 1);
-                current = loop[index];
             }
+            current = loop[index];
             count++;
 
             Peg obstacle = current.getPeg();
@@ -108,6 +127,55 @@ public class Game {
         return null;
     }
 
+    public Hole processHeaven(Peg peg, int spaces){
+        Integer playerID = peg.getPlayer().getId();
+        Hole current = peg.getPlayer().getHeavensGate();
+        Hole[] heaven = this.board.getHeavens()[playerID];
+        current = heaven[this.board.getHeavenIndex(playerID, current.getFork())];
+        int count = 1;
+        while (count < spaces){
+            current = heaven[count];
+
+            Peg obstacle = current.getPeg();
+            if (obstacle != null) {
+                return null;
+            }
+
+            count++;
+        }
+
+        Hole h = current;
+        if (this.testAddPegToHole(peg, h)){
+            peg.setInHeaven(true);
+            return h;
+        }
+        return null;
+    }
+
+    public Hole moveInHeaven(Peg peg, int spaces){
+        Integer playerID = peg.getPlayer().getId();
+        Hole[] heaven = this.board.getHeavens()[playerID];
+        int index = this.board.getHeavenIndex(playerID, peg.getHole().getId());
+        Hole current = heaven[index];
+        int count = index;
+
+        while (count < index + spaces){
+            count++;
+            current = heaven[count];
+
+            Peg obstacle = current.getPeg();
+            if (obstacle != null) {
+                return null;
+            }
+        }
+
+        Hole h = current;
+        if (this.testAddPegToHole(peg, h)){
+            peg.setInHeaven(true);
+            return h;
+        }
+        return null;
+    }
 
     public boolean move(Peg peg, Card card){
         Value value = card.getValue();
@@ -238,6 +306,7 @@ public class Game {
             hole.removePeg();
             //Send the peg to its home.
             b.sendHome();
+            this.addPegToHole(b, this.board.getHomes()[b.getPlayer().getId()][b.getNum()]);
             //call addPegToHole on peg a and the hole.
             return this.addPegToHole(a, hole);
         }
@@ -333,8 +402,8 @@ public class Game {
         Hole hole = b.getHole();
         //If the pegs are two partner pieces.
         if (a.getPlayer().getPartner().equals(b.getPlayer())){
-            //Call sendToHeavensGate on b first, if that is successful, call addPegToHole on peg a and the hole.
-            return testSendToHeavensGate(b) && testAddPegToHole(a, hole);
+            //Call sendToHeavensGate on b first, if that is successful, the peg can be added;
+            return testSendToHeavensGate(b);
         } else {
             //Sending an opponent to their home will always succeed.
             return true;
@@ -384,15 +453,15 @@ public class Game {
             this.deck.shuffle();
         }
 
-        return this.deck.getCards().removeFirst();
+        return this.deck.getCards().remove(0);
     }
 
-    public Integer getId() {
-        return id;
+    public Deck getDeck(){
+        return this.deck;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public String getRoomName(){
+        return this.roomName;
     }
 
     public Board getBoard(){
@@ -403,9 +472,28 @@ public class Game {
         return this.players;
     }
 
+    //For testing
+    public void setPegOnHole(Peg p, Hole h){
+        p.setHole(h);
+        h.setPeg(p);
+    }
+
     @Override
     public boolean equals(Object o){
         if (!(o instanceof Game g)) return false;
-        return this.id.equals(g.getId());
+        return this.roomName.equals(g.getRoomName());
+    }
+
+    public int getPlayerTurn() {
+        return playerTurn;
+    }
+
+    public void updatePlayerTurn() {
+        this.playerTurn++;
+        this.playerTurn %= NUM_PLAYERS;
+    }
+
+    public Hand[] getHands(){
+        return this.hands;
     }
 }

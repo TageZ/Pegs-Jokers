@@ -14,10 +14,12 @@ public class GameSerializer extends JsonSerializer<Game>{
             gen.writeNull();
         } else {
             gen.writeStartObject();
-            gen.writeStringField("id", game.getId().toString());
+            gen.writeStringField("roomName", game.getRoomName());
+            gen.writeNumberField("playerTurn", game.getPlayerTurn());
             gen.writeObjectField("loop", game.getBoard().getLoop());
             gen.writeObjectField("heavens", game.getBoard().getHeavens());
-            gen.writeObjectField("players", game.getPlayers());
+            gen.writeObjectField("starts", game.getBoard().getHomes());
+            gen.writeObjectField("hands", game.getHands());
             gen.writeEndObject();
         }
     }

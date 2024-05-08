@@ -1,12 +1,6 @@
 package com.example.pegsandjokers.service;
 
-import com.example.pegsandjokers.api.controller.model.Board;
-import com.example.pegsandjokers.api.controller.model.Card;
-import com.example.pegsandjokers.api.controller.model.Game;
-import com.example.pegsandjokers.api.controller.model.Peg;
-import com.example.pegsandjokers.api.controller.model.Player;
-import com.example.pegsandjokers.api.controller.model.Turn;
-import com.example.pegsandjokers.api.controller.model.Value;
+import com.example.pegsandjokers.api.controller.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,15 +14,11 @@ public class GameService {
 
     public GameService(){
         this.gameList = new ArrayList<>();
-
-        Game game = new Game(1);
-
-        this.gameList.add(game);
     }
-    public Optional<Game> getGame(Integer id) {
+    public Optional<Game> getGame(String roomName) {
         Optional<Game> optional = Optional.empty();
         for (Game game : this.gameList){
-            if (id.equals(game.getId())){
+            if (roomName.equals(game.getRoomName())){
                 optional = Optional.of(game);
                 return optional;
             }
@@ -37,24 +27,35 @@ public class GameService {
     }
 
     public boolean takeTurn(Turn turn) {
-        Game g = getGameByID(turn.getGameID());
-        Player player = g.getPlayers()[turn.getPlayerID()];
+        Game g = getGameByRoomName(turn.getRoomName());
+        Player player = g.getPlayers()[g.getPlayerTurn()];
+        if (turn.getP() == null){
+            return true;
+        }
         Peg p = getPeg(turn.getP(), player);
         Peg p2 = turn.getP2();
         Card c = turn.getCard();
         int spaces = turn.getSpaces();
 
-        if (p2 != null){
+        if (p == null){
+            return false;
+        } else if (p2 != null){
             Player player2 = g.getPlayers()[getNumPlayerFromColor(p2.getColor())];
             p2 = getPeg(turn.getP2(), player2);
             if (c.getValue().equals(Value.TWO)) {
                 return g.swap(p, p2);
             } else if (c.getValue().equals(Value.JOKER)) {
+                if (p2.getInHome()){
+                    return false;
+                }
                 return g.kill(p, p2);
             } else if (c.getValue().equals(Value.SEVEN) || c.getValue().equals(Value.NINE)) {
                 return g.splitMove(p, p2, c, spaces);
             }
-        } else if (p.getHole() == null) {
+        } else if (p.getInHome()) {
+            if (!(c.getValue().equals(Value.JOKER) || c.getValue().equals(Value.ACE) || c.getValue().equals(Value.JACK) || c.getValue().equals(Value.KING) || c.getValue().equals(Value.QUEEN))){
+                return false;
+            }
             return g.getOut(p);
         }
         else {
@@ -63,30 +64,31 @@ public class GameService {
         return false;
     }
 
-    public Integer createGame(){
-        Integer id = gameList.size();
-        Game g = new Game(id);
+    public void createGame(String roomName){
+        Game g = new Game(roomName);
         gameList.add(g);
-        return id;
     }
 
-    public Turn getTurn(){
-        Integer playerID = 0;
-        Card c = new Card(Value.NINE);
-        Peg p = new Peg();
-        Peg p2 = null;
-        Integer gameId = 1;
-        int spaces = 0;
-        return new Turn(playerID, c, p, p2, gameId, spaces);
-    }
-
-    public Game getGameByID(Integer id){
+    public Game getGameByRoomName(String roomName){
         for (Game g : this.gameList){
-            if (g.getId().equals(id)){
+            if (g.getRoomName().equals(roomName)){
                 return g;
             }
         }
         return null;
+    }
+
+    public boolean updateCard(Turn turn){
+        Game g = getGameByRoomName(turn.getRoomName());
+        Hand hand = g.getHands()[g.getPlayerTurn()];
+        Card[] cards = hand.getCards();
+        for (int i = 0; i < cards.length; i++){
+            if (cards[i].equals(turn.getCard())){
+                cards[i] = g.getRandomCard();
+                return true;
+            }
+        }
+        return false;
     }
 
     public Peg getPeg(Peg p, Player player){
@@ -113,13 +115,13 @@ public class GameService {
         };
     }
 
-    public boolean isWinner(Integer gameID){
-        Game g = getGameByID(gameID);
+    public boolean isWinner(String roomName){
+        Game g = getGameByRoomName(roomName);
         return g != null && g.isWinner();
     }
 
-    public Card newCard(Integer gameID){
-        Game g = getGameByID(gameID);
-        return g.getRandomCard();
+    public void incrementPlayerTurn(String roomName){
+        Game g = getGameByRoomName(roomName);
+        g.updatePlayerTurn();
     }
 }

@@ -11,17 +11,17 @@ public class Player{
     private Integer id;
     private String name;
     private String color;
-    private List<Card> hand;
+    private Hand hand;
     private Player partner;
     private List<Peg> pegs;
 
     private Hole heavensGate;
     private Hole homeStep;
 
-    public Player(Integer id, String color){
+    public Player(Integer id, String color, Deck deck){
         this.id = id;
         this.color = color;
-        this.hand = new ArrayList<>();
+        this.hand = new Hand(id, deck);
         this.pegs = new ArrayList<Peg>();
     }
 
@@ -30,7 +30,7 @@ public class Player{
         return this.name;
     }
 
-    public List<Card> getHand(){
+    public Hand getHand(){
         return this.hand;
     }
 
@@ -40,10 +40,6 @@ public class Player{
 
     public void setPartner(Player p){
         this.partner = p;
-    }
-
-    public void addCardToHand(Card c){
-        this.hand.add(c);
     }
 
     public void setPegs(List<Peg> pegs){

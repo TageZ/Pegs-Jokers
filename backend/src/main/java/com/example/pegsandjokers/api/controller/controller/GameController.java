@@ -1,5 +1,8 @@
 package com.example.pegsandjokers.api.controller.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.example.pegsandjokers.api.controller.model.Board;
 import com.example.pegsandjokers.api.controller.model.Card;
 import com.example.pegsandjokers.api.controller.model.Game;
@@ -13,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class GameController {
 
     private GameService gameService;
@@ -23,31 +27,30 @@ public class GameController {
     }
 
     @GetMapping("/board")
-    public Game getGame(@RequestParam Integer id){
-        Optional<Game> game = gameService.getGame(id);
+    public Game getGame(@RequestParam String roomName){
+        Optional<Game> game = gameService.getGame(roomName);
         return (Game) game.orElse(null);
     }
 
-    @GetMapping("/turn")
-    public Turn getTurn(){
-        return gameService.getTurn();
-    }
-
-    @GetMapping("/game")
-    public ResponseEntity<?> makeNewGame(){
-        Integer id = gameService.createGame();
-        return ResponseEntity.ok().body("New game created! ID = " + Integer.toString(id));
+    @PostMapping("/game")
+    public ResponseEntity<?> makeNewGame(@RequestParam String roomName){
+        gameService.createGame(roomName);
+        return ResponseEntity.ok().body("New game created! Room Name: " + roomName);
     }
 
     @PostMapping("/play/turn")
     public ResponseEntity<?> playTurn(@RequestBody Turn turn) {
         boolean success = gameService.takeTurn(turn);
         if (success) {
-            if (gameService.isWinner(turn.getGameID())){
+            if (gameService.isWinner(turn.getRoomName())){
                 return ResponseEntity.ok().body("Game Over!");
             }
-            Card c = gameService.newCard(turn.getGameID());
-            return ResponseEntity.ok().body(c);
+            boolean cardUpdated = gameService.updateCard(turn);
+            if (cardUpdated){
+                gameService.incrementPlayerTurn(turn.getRoomName());
+                return ResponseEntity.ok().body("Successful Move!");
+            }
+            return ResponseEntity.badRequest().body("Failed to Update Hand!");
         } else {
             return ResponseEntity.badRequest().body("Invalid move!");
         }

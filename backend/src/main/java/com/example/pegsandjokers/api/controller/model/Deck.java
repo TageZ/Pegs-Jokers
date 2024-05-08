@@ -30,6 +30,15 @@ public class Deck {
         }
     }
 
+    public Card getRandomCard(){
+        if (this.cards.isEmpty()){
+            this.initializeDeck();
+            this.shuffle();
+        }
+
+        return this.cards.remove(0);
+    }
+
     public void shuffle(){
         Collections.shuffle(this.cards);
     }

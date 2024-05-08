@@ -6,14 +6,14 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 
-public class PlayerSerializer extends JsonSerializer<Player> {
+public class HandSerializer extends JsonSerializer<Hand> {
     @Override
-    public void serialize(Player player, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        if (player == null) {
+    public void serialize(Hand hand, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+        if (hand == null) {
             gen.writeNull();
         } else {
             gen.writeStartObject();
-            gen.writeObjectField("hand", player.getHand());
+            gen.writeObjectField("cards", hand.getCards());
             gen.writeEndObject();
         }
     }
