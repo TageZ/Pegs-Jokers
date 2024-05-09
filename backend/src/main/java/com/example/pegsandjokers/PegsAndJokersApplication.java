@@ -45,6 +45,14 @@ public class PegsAndJokersApplication {
             }
         });
 
+        server.addEventListener("winner", String.class, new DataListener<String>() {
+            public void onData(SocketIOClient client, String data, AckRequest ackRequest) throws Exception {
+                System.out.println("Winner found " + data);
+                // Broadcast the updated board data only to clients in the same game room
+                server.getRoomOperations(data.trim()).sendEvent("winnerResponse", data);
+            }
+        });
+
         server.addEventListener("join", String.class, new DataListener<String>() {
             public void onData(SocketIOClient client, String data, AckRequest ackRequest) throws Exception {
                 String[] parts = data.split(",");

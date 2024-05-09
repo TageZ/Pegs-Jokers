@@ -19,6 +19,7 @@ function Game({user}) {
     const [newBoard, setBoard] = useState(true)
     const [otherBoard, setOtherBoard] = useState(true)
     const [winner, setWinner] = useState(false);
+    const [otherWinner, setOtherWinner] = useState(true);
     const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
     const [response, setResponse] = useState('Connected to server')
@@ -52,7 +53,8 @@ function Game({user}) {
 
         newSocket.on('winnerResponse', (response) => {
             console.log('Game is Over:', response);
-            // setOtherWinner(true)
+            setOtherWinner(true);
+            setPlayer(response);
             setResponse('Received response: ' + response)
         });
 
@@ -83,10 +85,9 @@ function Game({user}) {
     }, [instance, player])
 
 
-    // return winner === true ? (
-    //     <WinScreen player={player}/>
-    // ) : socket ? (
-    return socket ? (
+    return otherWinner === true ? ( 
+        <WinScreen player={instance} winner={player}/>
+    ) : socket ? (
         <div className='game-page' data-testid="game-page">
             <NavBar title="Pegs & Jokers"/>
             <div className='game'>
