@@ -7,7 +7,6 @@ import { SideBar } from '../components/SideBar';
 import { Hand } from '../components/Hand';
 import io from 'socket.io-client';
 import '../Styling.css'
-import { useParams } from 'react-router-dom';
 import WinScreen from '../components/WinScreen';
 import { useParams, useNavigate} from 'react-router-dom';
 import { onAuthStateChanged, signOut, getAuth} from "firebase/auth";
@@ -24,7 +23,7 @@ function Game({user}) {
     const [newBoard, setBoard] = useState(true)
     const [otherBoard, setOtherBoard] = useState(true)
     const [winner, setWinner] = useState(false);
-    const [otherWinner, setOtherWinner] = useState(true);
+    const [otherWinner, setOtherWinner] = useState(false);
     const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
     const [response, setResponse] = useState('Connected to server')
@@ -100,8 +99,7 @@ function Game({user}) {
           console.log("user is logged out")
           navigate("/")
         }
-      });
-    })
+    });
 
     const printUsers = () => {
         console.log(users)
