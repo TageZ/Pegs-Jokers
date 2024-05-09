@@ -220,6 +220,8 @@ public class Game {
         if (h1 != null) {
             //Get the original hole for if a reversion is needed
             Hole og1 = peg1.getHole();
+            //Get the original state if a reversion is needed
+            boolean inHeaven = peg1.getInHeaven();
             //Add the peg to the hole
             this.addPegToHole(peg1, h1);
 
@@ -238,6 +240,7 @@ public class Game {
             } else {
                 //Otherwise, revert original move.
                 this.addPegToHole(peg1, og1);
+                peg1.setInHeaven(inHeaven);
                 this.addPegToHole(peg2, h1);
                 return false;
             }
