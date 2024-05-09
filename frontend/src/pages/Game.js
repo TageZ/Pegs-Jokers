@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import Board from '../components/Board'
 import NavBar from '../components/NavBar'
 import LoadingPage from '../pages/Loading';
+import PlayerList from '../components/PlayerList';
 import { SideBar } from '../components/SideBar';
 import { Hand } from '../components/Hand';
 import io from 'socket.io-client';
@@ -9,6 +10,7 @@ import '../Styling.css'
 import { useParams, useNavigate} from 'react-router-dom';
 import { onAuthStateChanged, signOut, getAuth} from "firebase/auth";
 import { auth } from '../firebase';
+
 
 
 function Game({user}) {
@@ -121,9 +123,10 @@ function Game({user}) {
                 </div>
                 {turn && (
                     <div className='side-bar'>
-                        <div className='players'>
-                            <h1>Player</h1>
-                        </div>
+                        <PlayerList
+                            player1={users[0]}
+                            player2={users[1]}
+                        />
                         <SideBar
                             pegs={pegs}
                             card={card}
