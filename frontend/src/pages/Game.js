@@ -50,6 +50,12 @@ function Game({user}) {
             setResponse('Received response: ' + response)
         });
 
+        newSocket.on('winnerResponse', (response) => {
+            console.log('Game is Over:', response);
+            // setOtherWinner(true)
+            setResponse('Received response: ' + response)
+        });
+
         newSocket.on('getUsers', (users) => {
             setUsers(users);
         });
@@ -65,6 +71,12 @@ function Game({user}) {
             socket.emit('updateBoard', code);
         }
     }, [newBoard]);
+
+    useEffect(() => {
+        if (socket) {
+            socket.emit('winner', code);
+        }
+    }, [winner]);
 
     useEffect(() => {
         setTurn(instance === player)
