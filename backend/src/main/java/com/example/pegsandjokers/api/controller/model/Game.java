@@ -95,6 +95,7 @@ public class Game {
     public Hole processMove(Peg peg, int spaces, boolean forward) {
         if (peg.getInHeaven()){
             //TODO ADD index out of bounds catch of some kind
+            System.out.println("MOVE IN HEAVEN");
             return moveInHeaven(peg, spaces);
         }
         Hole[] loop = this.board.getLoop();
@@ -105,6 +106,7 @@ public class Game {
 
         while (count < spaces) {
             if (current.equals(peg.getPlayer().getHeavensGate()) && (spaces-count) <= SIZE_OF_HEAVEN && forward) {
+                System.out.println("PROCESS HEAVEN");
                 return processHeaven(peg, spaces-count);
             }
 
@@ -147,6 +149,7 @@ public class Game {
         }
 
         Hole h = current;
+        System.out.println("TESTING ADDING PEG TO HOLE: " + h);
         if (this.testAddPegToHole(peg, h)){
             peg.setInHeaven(true);
             return h;
@@ -316,6 +319,10 @@ public class Game {
      * @return - Whether the move was successful.
      */
     public boolean kill(Peg a, Peg b){
+        //If a is being taken out of home by a joker, remove it from home.
+        if (a.getInHome()){
+            a.removeFromHome();
+        }
         //Get the hole peg b is occupying.
         Hole hole = b.getHole();
         //If the pegs are two partner pieces.
