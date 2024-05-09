@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import Board from '../components/Board'
 import NavBar from '../components/NavBar'
 import LoadingPage from '../pages/Loading';
+import PlayerList from '../components/PlayerList';
 import { SideBar } from '../components/SideBar';
 import { Hand } from '../components/Hand';
 import io from 'socket.io-client';
@@ -119,8 +120,12 @@ function Game({user}) {
                         code = {code}
                     /> 
                 </div>
-                {turn && (
-                    <div className='side-bar'>
+                <div className='side-bar'>
+                    <PlayerList
+                        player1={users[0]}
+                        player2={users[1]}
+                    />
+                    {turn && (  
                         <SideBar
                             pegs={pegs}
                             card={card}
@@ -130,8 +135,8 @@ function Game({user}) {
                             player={player}
                             code = {code}
                         />
-                    </div>
-                )}
+                    )}
+                </div> 
             </div>
         </div>
     ) : (
