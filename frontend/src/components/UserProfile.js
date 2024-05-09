@@ -69,13 +69,13 @@ const UserProfile = () => {
             <img src={photoURL} alt="Profile Picture" className="profile-pic" />
           </div>
             <div className="player-stats">
-            <input type="file" onChange={handleImage} />
-            <button disabled={loading || !photo} onClick={handleUpload}>
-              Upload
-            </button>
-            <p>Display Name: {userData.name}</p>
-            <p>Email: {userData.email}</p>
-            <p>Account Created: {new Date(userData.creation).toLocaleString()}</p>
+              <input type="file" onChange={handleImage} />
+              <button disabled={loading || !photo} onClick={handleUpload}>
+                Upload
+              </button>
+              <p>Display Name: {userData.name}</p>
+              <p>Email: {userData.email}</p>
+              <p>Account Created: {new Date(userData.creation).toLocaleString()}</p>
           </div>
         </div>
       ) : (

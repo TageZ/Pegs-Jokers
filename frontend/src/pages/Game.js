@@ -12,7 +12,6 @@ import { onAuthStateChanged, signOut, getAuth} from "firebase/auth";
 import { auth } from '../firebase';
 
 
-
 function Game({user}) {
     const navigate = useNavigate();
     const instance = {user}.user;
@@ -121,12 +120,12 @@ function Game({user}) {
                         code = {code}
                     /> 
                 </div>
-                {turn && (
-                    <div className='side-bar'>
-                        <PlayerList
-                            player1={users[0]}
-                            player2={users[1]}
-                        />
+                <div className='side-bar'>
+                    <PlayerList
+                        player1={users[0]}
+                        player2={users[1]}
+                    />
+                    {turn && (  
                         <SideBar
                             pegs={pegs}
                             card={card}
@@ -136,8 +135,8 @@ function Game({user}) {
                             player={player}
                             code = {code}
                         />
-                    </div>
-                )}
+                    )}
+                </div> 
             </div>
         </div>
     ) : (

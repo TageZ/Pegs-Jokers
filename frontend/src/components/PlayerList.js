@@ -28,17 +28,30 @@ function PlayerList({player1, player2}){
     if (p2) {
         const [photo2, pName2] = await getPlayer(p2);
         setP2PhotoUrl(photo2);
-        setP2Name(pName2);    }
+        setP2Name(pName2);    
+    }
     }
 
     return (
         <div className="players">
-          <h1>Player</h1>
-          <div>
-            {player1 && <img src={p1PhotoURL} alt="Player 1 Picture" className="profile-pic" />}
-            {player2 && <img src={p2PhotoURL} alt="Player 2 Picture" className="profile-pic" />}
-          </div>
-          {player1 && p1Name} {player2 && p2Name}
+            <div className="player">
+                {player1 && (
+                <div className="display-name">
+                    <div className="player-info">
+                        <img src={p1PhotoURL} alt="Player 1 Picture" className="player-pic" />
+                        <span className="player-name">{p1Name}</span>
+                    </div>
+                </div>
+                )}
+                {player2 && (
+                <div className="display-name">
+                    <div className="player-info">
+                        <img src={p2PhotoURL} alt="Player 2 Picture" className="player-pic" />
+                        <span className="player-name">{p2Name}</span>
+                    </div>
+                </div>
+                )}
+            </div>
         </div>
       );
 };
