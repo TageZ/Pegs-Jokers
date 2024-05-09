@@ -55,8 +55,12 @@ public class GameService {
                     return false;
                 }
 
-                p.removeFromHome();
-                return g.kill(p, p2);
+
+                if (g.kill(p, p2)){
+                    p.removeFromHome();
+                    return true;
+                }
+                return false;
             } else if (c.getValue().equals(Value.SEVEN) || c.getValue().equals(Value.NINE)) {
                 return g.splitMove(p, p2, c, spaces, forward);
             }
