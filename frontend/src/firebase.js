@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth , browserLocalPersistence, setPersistence, updateProfile} from "firebase/auth";
-import { getDatabase, update } from "firebase/database";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDatabase, update, get, ref, child } from "firebase/database";
+import { getDownloadURL, getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAmD5NQcO8WkvkVPJw0QGpBLCqPoz-Z8gY",
@@ -38,4 +38,41 @@ export async function upload(file, currentUser, setLoading) {
   setLoading(false);
   // alert("Uploaded File!");
 }
+
+// export async function fetchUserData(userID) {
+//   try {
+//     const userRef = ref(database, `users/${userID}`);
+//     const snapshot = await get(child(userRef, "/"));
+
+//     if (snapshot.exists()) {
+//       setUserData(snapshot.val());
+//       if (user?.photoURL) {
+//         setPhotoUrl(user.photoURL);
+//       }
+//     } else {
+//       console.log("No user data available");
+//     }
+//   } catch (error) {
+//     console.error("Error fetching user data:", error);
+//   }
+// };
+
+
+
+export async function getPlayer(userId) {
+
+  try {
+    const userRef = ref(database, `users/${userId}/name`);
+    const name = await get(child(userRef, "/"));
+
+    const fileRef = storageRef(storage, 'profiles/' + userId + '.png');
+    const photoURL = await getDownloadURL(fileRef);
+    return [photoURL, name.val()];
+
+  } catch (error) {
+    console.error('Error getting Player:', error);
+    return ["https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg", "Unknown Player"];
+  }
+}
+
 export default app;

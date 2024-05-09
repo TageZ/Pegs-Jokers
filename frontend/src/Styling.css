@@ -55,6 +55,7 @@
   justify-content: center;
 }
 
+
 .turn-header p {
   font-weight: bold;
   font-size: x-large;
@@ -77,6 +78,36 @@
   font-weight: bold;
 }
 
+.player-info {
+  display: flex;
+  align-items: center;
+}
+
+.side-bar{
+  width: 260px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.players{
+  background-color: white;
+  margin-bottom: 30px;
+  align-content: space-between;
+}
+
+.player-name {
+  font-size: 30px;
+  font-weight: bold;
+  padding-left: 8px;
+}
+
+.display-name{
+  display: flex;
+  align-items: center;
+  align-content: space-between;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 
 .split-move {
   background-color: white;
@@ -492,6 +523,22 @@ input[type="text"] {
   border-width: 5px;
   border-color: #ed545c;
   border-style:outset;
+}
+
+.player-pic{
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  border-width: 4px;
+  border-color: #ed545c;
+  border-style:outset;
+}
+
+.player{
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+  padding: 8px;
 }
 
 .reset-password {
