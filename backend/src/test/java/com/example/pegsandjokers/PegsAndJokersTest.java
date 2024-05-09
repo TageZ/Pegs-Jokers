@@ -482,4 +482,42 @@ public class PegsAndJokersTest {
 		//Test
 		assert(test);
 	}
+
+	@Test
+	public void moveForwardIntoHeavenAndBackOverPiece(){
+		//Setup
+		Game g = new Game("test");
+		Player player = g.getPlayers()[0];
+		boolean test = true;
+		Peg x = player.getPegs().get(0);
+		Peg y = player.getPegs().get(1);
+
+		//Execute
+		test &= g.getOut(x);
+		test &= g.sendToHeavensGate(x);
+		test &= g.getOut(y);
+		test &= g.splitMove(x, y, new Card(Value.NINE), 3, true);
+
+		//Test
+		assert(test);
+	}
+
+	@Test
+	public void moveForwardIntoHeavenAndBackOverPieceWrongOrder(){
+		//Setup
+		Game g = new Game("test");
+		Player player = g.getPlayers()[0];
+		boolean test = true;
+		Peg x = player.getPegs().get(0);
+		Peg y = player.getPegs().get(1);
+
+		//Execute
+		test &= g.getOut(x);
+		test &= g.sendToHeavensGate(x);
+		test &= g.getOut(y);
+		test &= g.splitMove(y, x, new Card(Value.NINE), 6, false);
+
+		//Test
+		assert(!test);
+	}
 }
