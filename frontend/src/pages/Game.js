@@ -6,10 +6,13 @@ import { SideBar } from '../components/SideBar';
 import { Hand } from '../components/Hand';
 import io from 'socket.io-client';
 import '../Styling.css'
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate} from 'react-router-dom';
+import { onAuthStateChanged, signOut, getAuth} from "firebase/auth";
+import { auth } from '../firebase';
 
 
 function Game({user}) {
+    const navigate = useNavigate();
     const instance = {user}.user;
     const [pegs, setPegs] = useState([])
     const [card, setCard] = useState()
@@ -22,8 +25,11 @@ function Game({user}) {
     const [response, setResponse] = useState('Connected to server')
     const [users, setUsers] = useState([])
     const { code } = useParams(); // This retrieves the game code from the URL
+    const [id, setId] = useState('');
 
     useEffect(() => {
+
+
         // Connect to the server
         const socketUrl = `http://localhost:3306/`;
         const newSocket = io(socketUrl, { path: '/socket.io' });
@@ -32,7 +38,8 @@ function Game({user}) {
         // Listen for connection event
         newSocket.on('connect', () => {
             console.log('Connected to server');
-            newSocket.emit('join', `${code}, username`);
+            console.log(id);
+            newSocket.emit('join', `${code}, ${id}`);
             setResponse('Connected to server');
         });
     
@@ -57,7 +64,7 @@ function Game({user}) {
         return () => {
             newSocket.disconnect();
         };
-    }, []);
+    }, [id]);
 
     useEffect(() => {
         if (socket) {
@@ -65,6 +72,21 @@ function Game({user}) {
         }
     }, [newBoard]);
 
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+              // User is signed in, see docs for a list of available properties
+              // https://firebase.google.com/docs/reference/js/firebase.User
+              const uid = user.uid;
+              setId(uid);
+            } else {
+              // User is signed out
+              // ...
+              console.log("user is logged out")
+              navigate("/")
+            }
+          });
+    })
 
     const printUsers = () => {
         console.log(users)
