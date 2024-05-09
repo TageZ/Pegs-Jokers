@@ -129,7 +129,7 @@ public class GameService {
         do {
             peg = p.getPegs().get(numPeg);
             numPeg++;
-        } while (peg.getInHome() != true && numPeg < 5);
+        } while (!peg.getInHome() && numPeg < 5);
         boolean success = g.getOut(peg);
         if(!g.sendToHeavensGate(peg)) success = false;
         int spaces = 5 - p.getPegsInHeaven();
