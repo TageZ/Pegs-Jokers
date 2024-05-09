@@ -3,6 +3,8 @@ package com.example.pegsandjokers.api.controller.model;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @JsonSerialize(using = GameSerializer.class)
@@ -199,25 +201,44 @@ public class Game {
      * @param peg1 - The first peg to be moved
      * @param peg2 - The second peg to be moved
      * @param card - The card that is being played for a split (Which is a 7 or a 9)
-     * @param spacesForward - How many spaces the first peg should be moved forward.
+     * @param spaces - How many spaces the first peg should be moved.
+     * @param forward - Whether the first peg should move forward or backward.
      * @return - Whether the move was successful.
      */
-    public boolean splitMove(Peg peg1, Peg peg2, Card card, int spacesForward){
+    public boolean splitMove(Peg peg1, Peg peg2, Card card, int spaces, boolean forward) {
         //Get value of the card (either a SEVEN or a NINE).
         Value value = card.getValue();
 
         //Move the first peg forward the provided spaces.
-        Hole h1 = processMove(peg1, spacesForward, true);
-        //Move the second peg the remaining spaces. Forward if a 7, backward if a 9.
-        Hole h2 = processMove(peg2, value.ordinal() + 1 - spacesForward, value.equals(Value.SEVEN));
+        Hole h1 = processMove(peg1, spaces, forward);
+        Hole h2;
 
-        //Check if the both pegs can be moved as desired.
-        if (h1 != null && h2 != null){
+        //If first move is successful
+        if (h1 != null) {
+            //Get the original hole for if a reversion is needed
+            Hole og1 = peg1.getHole();
+            //Add the peg to the hole
             this.addPegToHole(peg1, h1);
-            this.addPegToHole(peg2, h2);
-            return true;
+
+            //Determine h2
+            if (value.equals(Value.SEVEN)) {
+                h2 = processMove(peg2, value.ordinal() + 1 - spaces, true);
+            } else {
+                h2 = processMove(peg2, value.ordinal() + 1 - spaces, !forward);
+            }
+
+            if (h2 != null) {
+                //If h2 isn't null, success.
+                //Move the second peg
+                this.addPegToHole(peg2, h2);
+                return true;
+            } else {
+                //Otherwise, revert original move.
+                this.addPegToHole(peg1, og1);
+                this.addPegToHole(peg2, h1);
+                return false;
+            }
         }
-        //Move is not successful.
         return false;
     }
 
@@ -268,7 +289,7 @@ public class Game {
      * @param peg2 - the other peg to be swapped.
      */
     public boolean swap(Peg peg1, Peg peg2){
-        if (peg1.getColor().equals(peg2.getColor())){
+        if (peg1.getColor().equals(peg2.getColor()) || peg1.getInHome() || peg2.getInHome()){
             return false;
         }
         //Get the two holes

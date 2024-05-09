@@ -79,6 +79,17 @@ public class Player{
         return count;
     }
 
+    public int getPegsInHeaven(){
+        int count = 0;
+        for (Peg p : this.pegs){
+            if (p.getInHeaven()){
+                count++;
+            }
+        }
+        return count;
+    }
+
+
     @Override
     public boolean equals(Object o){
         if (!(o instanceof Player p)) return false;

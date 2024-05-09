@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../Styling.css'
 
-function Place({ position = null, piece = null, pathColor=null, setPegs, turn}) {
+function Place({ position = null, piece = null, pathColor=null, setPegs, turn, pegs}) {
 
     const [hole, setHole] = useState(); // Initialize color state with an empty string
     const [background, setBackground] = useState(pathColor == null ? '#444444' : pathColor)
@@ -40,8 +40,8 @@ function Place({ position = null, piece = null, pathColor=null, setPegs, turn}) 
     }, [piece]); // Watch for changes in position and piece props
 
     const handlePegClick = () => {
-        if (turn && piece) {
-            setPegs(pegs => pegs ? [...pegs, piece] : [piece]);
+        if (turn && piece && pegs.length < 2) {
+            setPegs(pegs => [...pegs, piece]);
         }
     };
 
