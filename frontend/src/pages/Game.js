@@ -54,7 +54,6 @@ function Game({user}) {
         newSocket.on('winnerResponse', (response) => {
             console.log('Game is Over:', response);
             setOtherWinner(true);
-            setPlayer(response);
             setResponse('Received response: ' + response)
         });
 
@@ -83,7 +82,6 @@ function Game({user}) {
     useEffect(() => {
         setTurn(instance === player)
     }, [instance, player])
-
 
     return otherWinner === true ? ( 
         <WinScreen player={instance} winner={player}/>
