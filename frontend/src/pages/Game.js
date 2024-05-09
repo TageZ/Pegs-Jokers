@@ -99,6 +99,9 @@ function Game({user}) {
                 </div>
                 {turn && (
                     <div className='side-bar'>
+                        <div className='players'>
+                            <h1>Player</h1>
+                        </div>
                         <SideBar
                             pegs={pegs}
                             card={card}

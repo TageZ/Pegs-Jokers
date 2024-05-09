@@ -53,6 +53,12 @@
   padding-right: 20px;
 }
 
+.players{
+  text-align: center;
+  background-color: white;
+  margin-bottom: 40px;
+}
+
 .split-move {
   text-align: center;
   font-weight: bold;
