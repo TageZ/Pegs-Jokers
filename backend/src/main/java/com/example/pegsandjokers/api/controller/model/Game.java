@@ -322,10 +322,6 @@ public class Game {
      * @return - Whether the move was successful.
      */
     public boolean kill(Peg a, Peg b){
-        //If a is being taken out of home by a joker, remove it from home.
-        if (a.getInHome()){
-            a.removeFromHome();
-        }
         //Get the hole peg b is occupying.
         Hole hole = b.getHole();
         //If the pegs are two partner pieces.
