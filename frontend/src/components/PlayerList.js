@@ -11,6 +11,7 @@ function PlayerList({player1, player2, player3, player4}){
     const [p2PhotoURL, setP2PhotoUrl] = useState(
         "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
     );
+  
     const [p3PhotoURL, setP3PhotoUrl] = useState(
         "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
     );
@@ -29,6 +30,7 @@ function PlayerList({player1, player2, player3, player4}){
       }, [player1, player2, player3, player4]);
     
     async function fetchPlayers(p1, p2, p3, p4) {
+
     if (p1) {
         const [photo1, pName1] = await getPlayer(p1);
         setP1PhotoUrl(photo1);

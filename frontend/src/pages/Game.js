@@ -7,6 +7,7 @@ import { SideBar } from '../components/SideBar';
 import { Hand } from '../components/Hand';
 import io from 'socket.io-client';
 import '../Styling.css'
+import WinScreen from '../components/WinScreen';
 import { useParams, useNavigate} from 'react-router-dom';
 import { onAuthStateChanged, signOut, getAuth} from "firebase/auth";
 import { auth } from '../firebase';
@@ -21,6 +22,8 @@ function Game({user}) {
     const [player, setPlayer] = useState()
     const [newBoard, setBoard] = useState(true)
     const [otherBoard, setOtherBoard] = useState(true)
+    const [winner, setWinner] = useState(false);
+    const [otherWinner, setOtherWinner] = useState(false);
     const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
     const [response, setResponse] = useState('Connected to server')
@@ -56,9 +59,14 @@ function Game({user}) {
             setResponse('Received response: ' + response)
         });
 
+        newSocket.on('winnerResponse', (response) => {
+            console.log('Game is Over:', response);
+            setOtherWinner(true);
+            setResponse('Received response: ' + response)
+        });
+
         newSocket.on('getUsers', (users) => {
             setUsers(users);
-            console.log(users)
         });
         
         // Clean up on unmount
@@ -74,30 +82,32 @@ function Game({user}) {
     }, [newBoard]);
 
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-              // User is signed in, see docs for a list of available properties
-              // https://firebase.google.com/docs/reference/js/firebase.User
-              const uid = user.uid;
-              setId(uid);
-            } else {
-              // User is signed out
-              // ...
-              console.log("user is logged out")
-              navigate("/")
-            }
-          });
-    })
-
-    const printUsers = () => {
-        console.log(users)
-    }
+        if (socket) {
+            socket.emit('winner', code);
+        }
+    }, [winner]);
+      
+//   onAuthStateChanged(auth, (user) => {
+//         if (user) {
+//           // User is signed in, see docs for a list of available properties
+//           // https://firebase.google.com/docs/reference/js/firebase.User
+//           const uid = user.uid;
+//           setId(uid);
+//         } else {
+//           // User is signed out
+//           // ...
+//           console.log("user is logged out")
+//           navigate("/")
+//         }
+//     });
 
     useEffect(() => {
         setTurn(instance === player)
     }, [instance, player])
 
-    return socket ? (
+    return otherWinner === true ? ( 
+        <WinScreen player={instance} winner={player}/>
+    ) : socket ? (
         <div className='game-page' data-testid="game-page">
             <NavBar title="Pegs & Jokers"/>
             <div className='game'>
@@ -136,6 +146,7 @@ function Game({user}) {
                             setBoard={setBoard}
                             player={player}
                             code = {code}
+                            setWinner={setWinner}
                         />
                     )}
                 </div> 

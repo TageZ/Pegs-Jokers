@@ -13,7 +13,7 @@ public class PegsAndJokersTest {
 	public static final int SIZE_OF_HEAVEN = 5;
 	public static final int SIZE_OF_BOARD_SEGMENT = 18;
 	public static final int DECK_SIZE = 54;
-	public Game g = new Game(0);
+	public Game g = new Game("test");
 
 	@Test
 	public void testInitalizeBoardCreatesCorrectSizeLoop(){
@@ -100,7 +100,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testGetRandomCardShrinksAndInitializesDeck(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		while (!g.getDeck().getCards().isEmpty()){
 			g.getRandomCard();
 		}
@@ -117,7 +117,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testMovePegOut(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 
 		//Execute
@@ -130,7 +130,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testCantMovePegOutOnColor(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 
 		//Execute
@@ -143,7 +143,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testSwitchWithNonPartner(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Player p2 = g.getPlayers()[1];
 		Peg peg1 = p.getPegs().get(0);
@@ -164,7 +164,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testSwitchWithPartner(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Player p2 = g.getPlayers()[2];
 		Peg peg1 = p.getPegs().get(0);
@@ -185,7 +185,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testLandingOnTeammateSendsToHeavensGate(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Player p2 = g.getPlayers()[2];
 		Peg peg1 = p.getPegs().get(0);
@@ -204,7 +204,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testLandingOnTeammateSendsHome(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Player p2 = g.getPlayers()[1];
 		Peg peg1 = p.getPegs().get(0);
@@ -223,7 +223,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testIsWinnerWhenNoWinner(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		boolean expected = false;
 
 		//Execute
@@ -236,7 +236,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testIsWinnerWhenWinner(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Player p2 = g.getPlayers()[2];
 		for (Peg peg : p.getPegs()){
@@ -257,9 +257,9 @@ public class PegsAndJokersTest {
 	@Test
 	public void testGameEquals(){
 		//Setup
-		Game g = new Game(0);
-		Game g0 = new Game(0);
-		Game g1 = new Game(1);
+		Game g = new Game("test");
+		Game g0 = new Game("test");
+		Game g1 = new Game("test-2");
 
 		//Test
 		assertEquals(g, g0);
@@ -269,7 +269,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testMovePegForward(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Peg peg = p.getPegs().get(0);
 
@@ -284,7 +284,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testMovePegBackward(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Peg peg = p.getPegs().get(0);
 		Hole[] loop = g.getBoard().getLoop();
@@ -300,7 +300,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testMoveOntoEnemy(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Player p2 = g.getPlayers()[1];
 		Peg peg = p.getPegs().get(0);
@@ -319,7 +319,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testMoveOntoPartner(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Player p2 = g.getPlayers()[2];
 		Peg peg = p.getPegs().get(0);
@@ -337,7 +337,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testCantMoveOntoSame(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Peg peg = p.getPegs().get(0);
 		Peg peg2 = p.getPegs().get(1);
@@ -353,7 +353,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void testCantMoveOverSame(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Peg peg = p.getPegs().get(0);
 		Peg peg2 = p.getPegs().get(1);
@@ -369,7 +369,7 @@ public class PegsAndJokersTest {
 	@Test
 	public void splitForward(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Player p2 = g.getPlayers()[0];
 		Peg peg = p.getPegs().get(0);
@@ -380,13 +380,13 @@ public class PegsAndJokersTest {
 		g.getOut(peg2);
 
 		//Test
-		assert(g.splitMove(peg, peg2, new Card(Value.SEVEN), 5));
+		assert(g.splitMove(peg, peg2, new Card(Value.SEVEN), 5, true));
 	}
 
 	@Test
 	public void splitBackward(){
 		//Setup
-		Game g = new Game(0);
+		Game g = new Game("test");
 		Player p = g.getPlayers()[0];
 		Peg peg = p.getPegs().get(0);
 		Peg peg2 = p.getPegs().get(1);
@@ -396,6 +396,128 @@ public class PegsAndJokersTest {
 		g.setPegOnHole(peg2, g.getBoard().getLoop()[HOME_STEP - 1]);
 
 		//Test
-		assert(g.splitMove(peg, peg2, new Card(Value.NINE), 8));
+		assert(g.splitMove(peg, peg2, new Card(Value.NINE), 8, true));
+	}
+
+	@Test
+	public void movePiecesIntoHeavenEven(){
+		//Setup
+		Game g = new Game("test");
+		Player player = g.getPlayers()[0];
+		boolean test = true;
+		int count = 0;
+
+		//Execute
+		for (Peg peg : player.getPegs()){
+			peg.removeFromHome();
+			test = g.addPegToHole(peg, player.getHeavensGate());
+			test = g.movePeg(peg, 5-count, true);
+			count++;
+		}
+
+		//Test
+		assert(test);
+	}
+
+	@Test
+	public void movePiecesIntoHeavenOdd(){
+		//Setup
+		Game g = new Game("test");
+		Player player = g.getPlayers()[1];
+		boolean test = true;
+		int count = 0;
+
+		//Execute
+		for (Peg peg : player.getPegs()){
+			peg.removeFromHome();
+			test = g.addPegToHole(peg, player.getHeavensGate());
+			test &= g.movePeg(peg, 5-count, true);
+			count++;
+		}
+
+		//Test
+		assert(test);
+	}
+
+	@Test
+	public void movePiecesIntoEmptyHeavenSplitMoveEven(){
+		//Setup
+		Game g = new Game("test");
+		Player player = g.getPlayers()[0];
+		Player partner = player.getPartner();
+		boolean test = true;
+		Peg x = player.getPegs().get(0);
+		Peg y = partner.getPegs().get(0);
+
+		//Execute
+		test &= g.getOut(x);
+		test &= g.getOut(y);
+		test &= g.splitMove(x, y, new Card(Value.NINE), 6, false);
+		test &= g.splitMove(y, x, new Card(Value.NINE), 6, false);
+		test &= g.splitMove(x, y, new Card(Value.SEVEN), 3, false);
+		test &= g.move(y, new Card(Value.TWO));
+
+		//Test
+		assert(test);
+	}
+
+	@Test
+	public void movePiecesIntoEmptyHeavenSplitMoveOdd(){
+		//Setup
+		Game g = new Game("test");
+		Player player = g.getPlayers()[1];
+		Player partner = player.getPartner();
+		boolean test = true;
+		Peg x = player.getPegs().get(0);
+		Peg y = partner.getPegs().get(0);
+
+		//Execute
+		test &= g.getOut(x);
+		test &= g.getOut(y);
+		test &= g.splitMove(x, y, new Card(Value.NINE), 6, false);
+		test &= g.splitMove(y, x, new Card(Value.NINE), 6, false);
+		test &= g.splitMove(x, y, new Card(Value.SEVEN), 3, false);
+		test &= g.move(y, new Card(Value.TWO));
+
+		//Test
+		assert(test);
+	}
+
+	@Test
+	public void moveForwardIntoHeavenAndBackOverPiece(){
+		//Setup
+		Game g = new Game("test");
+		Player player = g.getPlayers()[0];
+		boolean test = true;
+		Peg x = player.getPegs().get(0);
+		Peg y = player.getPegs().get(1);
+
+		//Execute
+		test &= g.getOut(x);
+		test &= g.sendToHeavensGate(x);
+		test &= g.getOut(y);
+		test &= g.splitMove(x, y, new Card(Value.NINE), 3, true);
+
+		//Test
+		assert(test);
+	}
+
+	@Test
+	public void moveForwardIntoHeavenAndBackOverPieceWrongOrder(){
+		//Setup
+		Game g = new Game("test");
+		Player player = g.getPlayers()[0];
+		boolean test = true;
+		Peg x = player.getPegs().get(0);
+		Peg y = player.getPegs().get(1);
+
+		//Execute
+		test &= g.getOut(x);
+		test &= g.sendToHeavensGate(x);
+		test &= g.getOut(y);
+		test &= g.splitMove(y, x, new Card(Value.NINE), 6, false);
+
+		//Test
+		assert(!test);
 	}
 }

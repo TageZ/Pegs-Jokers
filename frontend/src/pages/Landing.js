@@ -3,7 +3,7 @@ import {Outlet, Link, useNavigate} from 'react-router-dom'
 import "../Styling.css"
 import { auth } from '../firebase';
 import title1 from "../assets/title_1T.png"
-import King from "../images/king\.png"
+import King from "../images/king.png"
 function Landing() {
     var user = auth.currentUser;
     console.log(user)

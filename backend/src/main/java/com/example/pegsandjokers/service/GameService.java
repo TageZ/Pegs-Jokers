@@ -36,9 +36,15 @@ public class GameService {
         Peg p2 = turn.getP2();
         Card c = turn.getCard();
         int spaces = turn.getSpaces();
+        boolean forward = turn.isForward();
 
         if (p == null){
             return false;
+        } else if (p.getInHome() && !c.getValue().equals(Value.JOKER)) {
+            if (!(c.getValue().equals(Value.ACE) || c.getValue().equals(Value.JACK) || c.getValue().equals(Value.KING) || c.getValue().equals(Value.QUEEN))){
+                return false;
+            }
+            return g.getOut(p);
         } else if (p2 != null){
             Player player2 = g.getPlayers()[getNumPlayerFromColor(p2.getColor())];
             p2 = getPeg(turn.getP2(), player2);
@@ -48,15 +54,16 @@ public class GameService {
                 if (p2.getInHome()){
                     return false;
                 }
-                return g.kill(p, p2);
-            } else if (c.getValue().equals(Value.SEVEN) || c.getValue().equals(Value.NINE)) {
-                return g.splitMove(p, p2, c, spaces);
-            }
-        } else if (p.getInHome()) {
-            if (!(c.getValue().equals(Value.JOKER) || c.getValue().equals(Value.ACE) || c.getValue().equals(Value.JACK) || c.getValue().equals(Value.KING) || c.getValue().equals(Value.QUEEN))){
+
+
+                if (g.kill(p, p2)){
+                    p.removeFromHome();
+                    return true;
+                }
                 return false;
+            } else if (c.getValue().equals(Value.SEVEN) || c.getValue().equals(Value.NINE)) {
+                return g.splitMove(p, p2, c, spaces, forward);
             }
-            return g.getOut(p);
         }
         else {
             return g.move(p, c);
@@ -118,6 +125,26 @@ public class GameService {
     public boolean isWinner(String roomName){
         Game g = getGameByRoomName(roomName);
         return g != null && g.isWinner();
+    }
+
+    public boolean sendPieceToHeaven(int playerNum) {
+        Game g = getGameByRoomName("test");
+        Player p = g.getPlayers()[playerNum];
+        Peg peg;
+        int numPeg = 0;
+        do {
+            peg = p.getPegs().get(numPeg);
+            numPeg++;
+        } while (!peg.getInHome() && numPeg < 5);
+        boolean success = g.getOut(peg);
+        if(!g.sendToHeavensGate(peg)) success = false;
+        int spaces = 5 - p.getPegsInHeaven();
+        Hole h = g.processMove(peg, spaces, true);
+        if (h != null){
+            g.addPegToHole(peg, h);
+            return true;
+        }
+        return false;
     }
 
     public void incrementPlayerTurn(String roomName){
