@@ -21,11 +21,12 @@ function Game({user}) {
     const [lastCard, setLastCard] = useState();
     const [cardImage, setCardImage] = useState();
     const [cards, setCards] = useState([])
+    const [cardUpdate, setCardUpdate] = useState(false);
     const [player, setPlayer] = useState()
     const [newBoard, setBoard] = useState(true)
     const [otherBoard, setOtherBoard] = useState(true)
     const [winner, setWinner] = useState(false);
-    const [otherWinner, setOtherWinner] = useState(false);
+    const [otherWinner, setOtherWinner] = useState(true);
     const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
     const [response, setResponse] = useState('Connected to server')
@@ -77,7 +78,13 @@ function Game({user}) {
         });
 
         newSocket.on('lastCard', (cardValue) => {
-            setCardImage(require(`../assets/cards/${cardValue}.png`));
+            if (cardValue){
+                try {
+                    setCardImage(require(`../assets/cards/${cardValue}.png`));
+                } catch {
+                    //Didn't work
+                }
+            }
         })
         
         // Clean up on unmount
@@ -89,7 +96,10 @@ function Game({user}) {
     useEffect(() => {
         if (socket) {
             socket.emit('updateBoard', code);
-            socket.emit('updateCard', `${code}, ${lastCard}`);
+            if (cardUpdate){
+                socket.emit('updateCard', `${code}, ${lastCard}`);
+                setCardUpdate(false);
+            }
         }
     }, [newBoard]);
 
@@ -112,8 +122,10 @@ function Game({user}) {
         setTurn(instance === player)
     }, [instance, player])
 
+    console.log(users);
+
     return otherWinner === true ? ( 
-        <WinScreen player={instance} winner={player}/>
+        <WinScreen player={instance} winner={player} playerID={users[instance]}/>
     ) : socket ? (
         <div className='game-page' data-testid="game-page">
             <NavBar title="Pegs & Jokers"/>
@@ -143,6 +155,7 @@ function Game({user}) {
                             pegs={pegs}
                             card={card}
                             setCard={setCard}
+                            setCardUpdate={setCardUpdate}
                             setPegs={setPegs}
                             setBoard={setBoard}
                             player={player}

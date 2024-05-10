@@ -1,15 +1,29 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom'
+import { getPlayer } from "../firebase";
 import title1 from "../assets/title_1T.png"
 import joker from "../images/king.png"
 import '../WinScreen.css'
 import '../Styling.css'
 
-const WinScreen = ({ player, winner }) => {
+const WinScreen = ({ player, winner, playerID }) => {
+
+  const[playerName, setPlayerName] = useState();
 
   const winnerTeam = winner % 2 === 0;
   const playerTeam = player % 2 === 0;
   const playerWon = winnerTeam === playerTeam;
+
+  useEffect(() => {
+    fetchPlayer(playerID);
+  }, [playerID]);
+
+  async function fetchPlayer(player) {
+    if (player) {
+        const [photo, name] = await getPlayer(player);
+        await setPlayerName(name);
+    }
+  }
   
   if (playerWon){
     return (
@@ -19,7 +33,7 @@ const WinScreen = ({ player, winner }) => {
               VICTORY!
           </h1>
           <h1 className="win-text">
-            Congrats player {player}, you won!
+            Congrats {playerName}, you won!
           </h1>
         </div>
         <div className="win-screen-elements">
@@ -40,7 +54,7 @@ const WinScreen = ({ player, winner }) => {
               DEFEAT!
           </h1>
           <h1 className="win-text">
-            Sorry player {player}, you lost!
+            Sorry {playerName}, you lost!
           </h1>
         </div>
         <div className="win-screen-elements">

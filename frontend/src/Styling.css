@@ -271,6 +271,7 @@
 }
 
 .home-page {
+  padding-top: 50px;
   display: flex;
   min-height: 100vh;
   align-items: center;
