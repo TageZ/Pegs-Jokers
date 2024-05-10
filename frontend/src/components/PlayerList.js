@@ -53,40 +53,38 @@ function PlayerList({player1, player2, player3, player4}){
 
     return (
         <div className="players">
-            <div className="player">
-                {player1 && (
-                <div className="display-name">
-                    <div className="player-info">
-                        <img src={p1PhotoURL} alt="Player 1 Picture" className="player-pic" />
-                        <span className="player-name">{p1Name}</span>
-                    </div>
+            {player1 && (
+            <div className="display-name">
+                <div className="player-info">
+                    <img src={p1PhotoURL} alt="Player 1 Picture" className="player-pic-1" />
+                    <span className="player-name">{p1Name}</span>
                 </div>
-                )}
-                {player2 && (
-                <div className="display-name">
-                    <div className="player-info">
-                        <img src={p2PhotoURL} alt="Player 2 Picture" className="player-pic" />
-                        <span className="player-name">{p2Name}</span>
-                    </div>
-                </div>
-                )}
-                {player3 && (
-                <div className="display-name">
-                    <div className="player-info">
-                        <img src={p3PhotoURL} alt="Player 3 Picture" className="player-pic" />
-                        <span className="player-name">{p3Name}</span>
-                    </div>
-                </div>
-                )}
-                {player4 && (
-                <div className="display-name">
-                    <div className="player-info">
-                        <img src={p4PhotoURL} alt="Player 4 Picture" className="player-pic" />
-                        <span className="player-name">{p4Name}</span>
-                    </div>
-                </div>
-                )}
             </div>
+            )}
+            {player2 && (
+            <div className="display-name">
+                <div className="player-info">
+                    <img src={p2PhotoURL} alt="Player 2 Picture" className="player-pic-2" />
+                    <span className="player-name">{p2Name}</span>
+                </div>
+            </div>
+            )}
+            {player3 && (
+            <div className="display-name">
+                <div className="player-info">
+                    <img src={p3PhotoURL} alt="Player 3 Picture" className="player-pic-3" />
+                    <span className="player-name">{p3Name}</span>
+                </div>
+            </div>
+            )}
+            {player4 && (
+            <div className="display-name">
+                <div className="player-info">
+                    <img src={p4PhotoURL} alt="Player 4 Picture" className="player-pic-4" />
+                    <span className="player-name">{p4Name}</span>
+                </div>
+            </div>
+            )}
         </div>
       );
 };

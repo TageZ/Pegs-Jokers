@@ -50,23 +50,29 @@
 .player-info {
   display: flex;
   align-items: center;
+  background-color: inherit;
 }
 
 .side-bar{
   width: 260px;
   padding-left: 20px;
   padding-right: 20px;
+  background-color: inherit;
 }
 
 .players{
-  background-color: white;
+  background-color: inherit;
   margin-bottom: 30px;
   align-content: space-between;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
 }
 
 .player-name {
   font-size: 30px;
   font-weight: bold;
+  color: white;
   padding-left: 8px;
 }
 
@@ -478,20 +484,40 @@ input[type="text"] {
   border-style:outset;
 }
 
-.player-pic{
+.player-pic-1{
   height: 60px;
   width: 60px;
   border-radius: 50%;
   border-width: 4px;
-  border-color: #ed545c;
+  border-color: red;
   border-style:outset;
 }
 
-.player{
-  display: flex;
-  flex-direction: column;
-  align-content: space-between;
-  padding: 8px;
+.player-pic-2{
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  border-width: 4px;
+  border-color: fuchsia;
+  border-style:outset;
+}
+
+.player-pic-3{
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  border-width: 4px;
+  border-color: green;
+  border-style:outset;
+}
+
+.player-pic-4{
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  border-width: 4px;
+  border-color: blue;
+  border-style:outset;
 }
 
 .reset-password {
