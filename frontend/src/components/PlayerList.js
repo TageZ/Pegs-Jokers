@@ -41,13 +41,13 @@ function PlayerList({player1, player2, player3, player4}){
     }
     if (p3) {
         const [photo3, pName3] = await getPlayer(p3);
-        setP1PhotoUrl(photo3);
-        setP1Name(pName3);
+        setP3PhotoUrl(photo3);
+        setP3Name(pName3);
     }
     if (p4) {
         const [photo4, pName4] = await getPlayer(p4);
-        setP2PhotoUrl(photo4);
-        setP2Name(pName4);    
+        setP4PhotoUrl(photo4);
+        setP4Name(pName4);    
     }
     }
 
