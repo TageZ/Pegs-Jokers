@@ -9,12 +9,11 @@ import io from 'socket.io-client';
 import '../Styling.css'
 import WinScreen from '../components/WinScreen';
 import { useParams, useNavigate} from 'react-router-dom';
-import { onAuthStateChanged, signOut, getAuth} from "firebase/auth";
+import { onAuthStateChanged} from "firebase/auth";
 import { auth } from '../firebase';
 
 
 function Game({user}) {
-    const navigate = useNavigate();
     const instance = {user}.user;
     const [pegs, setPegs] = useState([])
     const [card, setCard] = useState()
@@ -35,48 +34,39 @@ function Game({user}) {
     const [id, setId] = useState('');
 
     useEffect(() => {
-
-        // Connect to the server
         const socketUrl = `http://localhost:3306/`;
         const newSocket = io(socketUrl, { path: '/socket.io' });
         setSocket(newSocket);
     
         // Listen for connection event
         newSocket.on('connect', () => {
-            console.log('Connected to server');
             newSocket.emit('join', `${code}, ${id}`);
             setResponse('Connected to server');
         });
     
         // Listen for disconnect event
         newSocket.on('disconnect', () => {
-            console.log('Disconnected from server');
             setResponse('Disconnected from server');
         });
 
+        // Listen for board response
         newSocket.on('updateBoardResponse', (response) => {
-            console.log('Received move response:', response);
             setOtherBoard(true);
             setResponse('Received response: ' + response)
         });
 
+        // Listen for winner response
         newSocket.on('winnerResponse', (response) => {
-            console.log('Game is Over:', response);
             setOtherWinner(true);
             setResponse('Received response: ' + response)
         });
 
-        newSocket.on('winnerResponse', (response) => {
-            console.log('Game is Over:', response);
-            setOtherWinner(true);
-            setResponse('Received response: ' + response)
-        });
-
+        // Gets users
         newSocket.on('getUsers', (users) => {
             setUsers(users);
-            console.log(users); 
         });
 
+        // Gets last card played
         newSocket.on('lastCard', (cardValue) => {
             if (cardValue){
                 try {
@@ -87,7 +77,6 @@ function Game({user}) {
             }
         })
         
-        // Clean up on unmount
         return () => {
             newSocket.disconnect();
         };
@@ -122,7 +111,6 @@ function Game({user}) {
         setTurn(instance === player)
     }, [instance, player])
 
-    console.log(users);
 
     return otherWinner === true ? ( 
         <WinScreen player={instance} winner={player} playerID={users[instance]}/>

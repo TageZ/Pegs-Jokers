@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Place from './Place'
 import '../Styling.css'
-import LoadingPage from '../pages/Loading'
-import { initializeAnalytics } from 'firebase/analytics'
 
 function Board({setPegs, pegs, newBoard, setBoard, setCards, setPlayer, user, turn, otherBoard, setOtherBoard, code}) {
 
@@ -24,21 +22,21 @@ function Board({setPegs, pegs, newBoard, setBoard, setCards, setPlayer, user, tu
             const result = await response.json();
             setData(result);
         } catch (error) {
-            console.error("Error:", error);
+            // Error
         }
     }
 
-    let num = 19;
+    const boardSize = 19;
     const gridContainer = {
         display: 'grid',
-        gridTemplateColumns: `repeat(${num}, auto)`,
+        gridTemplateColumns: `repeat(${boardSize}, auto)`,
 
     }
 
     let initialBoard = []
-    for (let i = 0; i < num; i++) {
+    for (let i = 0; i < boardSize; i++) {
         let temp = []
-        for (let j = 0; j < num; j++) {
+        for (let j = 0; j < boardSize; j++) {
             temp.push(null)
         }
         initialBoard.push(temp)
@@ -140,8 +138,6 @@ function Board({setPegs, pegs, newBoard, setBoard, setCards, setPlayer, user, tu
 
     useEffect(() => {
         if (!data.loop) return;
-
-        // const player = data.playerTurn;
         const hand = data.hands[user].cards;
         let cards = [];
         for (let i = 0; i < 5; i++){
