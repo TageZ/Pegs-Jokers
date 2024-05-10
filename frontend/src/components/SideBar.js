@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import '../Styling.css'
 
-export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code, setWinner}) {
+export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code, setWinner, setLastCard, setCardUpdate}) {
 
   const [splitMove, setSplitMove] = useState(false);
   const [spaces, setSpaces] = useState(null);
@@ -65,6 +65,11 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code, s
       const data = await res.text();
       if (data === 'Game Over!'){
         setWinner(true);
+      }
+
+      if (data === 'Successful Move!'){
+        setLastCard(card.value);
+        setCardUpdate(true);
       }
       
     } catch (error) {

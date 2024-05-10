@@ -49,7 +49,7 @@ function Waiting() {
     const handleLogout = () => {               
         signOut(auth).then(() => {
         // Sign-out successful.
-            navigate("/");
+            // navigate("/");
             console.log("Signed out successfully")
         }).catch((error) => {
         // An error happened.

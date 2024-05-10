@@ -93,8 +93,10 @@ public class Game {
      * @return - The hole the peg is wanting to move to if valid, otherwise null.
      */
     public Hole processMove(Peg peg, int spaces, boolean forward) {
+        if (peg.getInHome()){
+            return null;
+        }
         if (peg.getInHeaven()){
-            //TODO ADD index out of bounds catch of some kind
             System.out.println("MOVE IN HEAVEN");
             return moveInHeaven(peg, spaces);
         }
@@ -107,7 +109,10 @@ public class Game {
         while (count < spaces) {
             if (current.equals(peg.getPlayer().getHeavensGate()) && (spaces-count) <= SIZE_OF_HEAVEN && forward) {
                 System.out.println("PROCESS HEAVEN");
-                return processHeaven(peg, spaces-count);
+                Hole h = processHeaven(peg, spaces-count);
+                if (h != null){
+                    return h;
+                }
             }
 
             if (forward) {
@@ -166,7 +171,11 @@ public class Game {
 
         while (count < index + spaces){
             count++;
-            current = heaven[count];
+            if (count < heaven.length){
+                current = heaven[count];
+            } else {
+                return null;
+            }
 
             Peg obstacle = current.getPeg();
             if (obstacle != null) {
@@ -209,6 +218,10 @@ public class Game {
      * @return - Whether the move was successful.
      */
     public boolean splitMove(Peg peg1, Peg peg2, Card card, int spaces, boolean forward) {
+        if (peg1.getInHome() || peg2.getInHome()){
+            return false;
+        }
+
         //Get value of the card (either a SEVEN or a NINE).
         Value value = card.getValue();
 

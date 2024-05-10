@@ -18,12 +18,15 @@ function Game({user}) {
     const instance = {user}.user;
     const [pegs, setPegs] = useState([])
     const [card, setCard] = useState()
+    const [lastCard, setLastCard] = useState();
+    const [cardImage, setCardImage] = useState();
     const [cards, setCards] = useState([])
+    const [cardUpdate, setCardUpdate] = useState(false);
     const [player, setPlayer] = useState()
     const [newBoard, setBoard] = useState(true)
     const [otherBoard, setOtherBoard] = useState(true)
     const [winner, setWinner] = useState(false);
-    const [otherWinner, setOtherWinner] = useState(false);
+    const [otherWinner, setOtherWinner] = useState(true);
     const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
     const [response, setResponse] = useState('Connected to server')
@@ -33,7 +36,6 @@ function Game({user}) {
 
     useEffect(() => {
 
-
         // Connect to the server
         const socketUrl = `http://localhost:3306/`;
         const newSocket = io(socketUrl, { path: '/socket.io' });
@@ -42,7 +44,6 @@ function Game({user}) {
         // Listen for connection event
         newSocket.on('connect', () => {
             console.log('Connected to server');
-            console.log(id);
             newSocket.emit('join', `${code}, ${id}`);
             setResponse('Connected to server');
         });
@@ -65,9 +66,26 @@ function Game({user}) {
             setResponse('Received response: ' + response)
         });
 
+        newSocket.on('winnerResponse', (response) => {
+            console.log('Game is Over:', response);
+            setOtherWinner(true);
+            setResponse('Received response: ' + response)
+        });
+
         newSocket.on('getUsers', (users) => {
             setUsers(users);
+            console.log(users); 
         });
+
+        newSocket.on('lastCard', (cardValue) => {
+            if (cardValue){
+                try {
+                    setCardImage(require(`../assets/cards/${cardValue}.png`));
+                } catch {
+                    //Didn't work
+                }
+            }
+        })
         
         // Clean up on unmount
         return () => {
@@ -78,6 +96,10 @@ function Game({user}) {
     useEffect(() => {
         if (socket) {
             socket.emit('updateBoard', code);
+            if (cardUpdate){
+                socket.emit('updateCard', `${code}, ${lastCard}`);
+                setCardUpdate(false);
+            }
         }
     }, [newBoard]);
 
@@ -87,26 +109,23 @@ function Game({user}) {
         }
     }, [winner]);
       
-//   onAuthStateChanged(auth, (user) => {
-//         if (user) {
-//           // User is signed in, see docs for a list of available properties
-//           // https://firebase.google.com/docs/reference/js/firebase.User
-//           const uid = user.uid;
-//           setId(uid);
-//         } else {
-//           // User is signed out
-//           // ...
-//           console.log("user is logged out")
-//           navigate("/")
-//         }
-//     });
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+            const uid = user.uid;
+            setId(uid);
+            }
+        });
+    });
 
     useEffect(() => {
         setTurn(instance === player)
     }, [instance, player])
 
+    console.log(users);
+
     return otherWinner === true ? ( 
-        <WinScreen player={instance} winner={player}/>
+        <WinScreen player={instance} winner={player} playerID={users[instance]}/>
     ) : socket ? (
         <div className='game-page' data-testid="game-page">
             <NavBar title="Pegs & Jokers"/>
@@ -130,23 +149,33 @@ function Game({user}) {
                         code = {code}
                     /> 
                 </div>
-                {turn ? (
-                    <div className='side-bar'>
+                <div className='side-bar'>
+                    {turn && (  
                         <SideBar
                             pegs={pegs}
                             card={card}
                             setCard={setCard}
+                            setCardUpdate={setCardUpdate}
                             setPegs={setPegs}
                             setBoard={setBoard}
                             player={player}
                             code = {code}
                             setWinner={setWinner}
+                            setLastCard={setLastCard}
                         />
-                    </div>
-                ) : (
-                    <div className='turn-bar'></div>
-                )}
+                    )}
+                </div> 
             </div>
+            <PlayerList
+                currentPlayer={player}
+                player1={users[0]}
+                player2={users[1]}
+                player3={users[2]}
+                player4={users[3]}
+            />
+            {cardImage && <div className='last-card'>
+                <img src={cardImage}/>
+            </div>}
         </div>
     ) : (
         <LoadingPage />
