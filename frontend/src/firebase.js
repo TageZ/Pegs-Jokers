@@ -25,7 +25,7 @@ export const auth = getAuth(app);
 export const storage = getStorage();
 
 export async function upload(file, currentUser, setLoading) {
-  const fileRef = ref(storage, 'profiles/' + currentUser.uid + '.png');
+  const fileRef = storageRef(storage, 'profiles/' + currentUser.uid + '.png');
 
   setLoading(true);
 
