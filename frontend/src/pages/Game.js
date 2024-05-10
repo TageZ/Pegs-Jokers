@@ -33,7 +33,6 @@ function Game({user}) {
 
     useEffect(() => {
 
-
         // Connect to the server
         const socketUrl = `http://localhost:3306/`;
         const newSocket = io(socketUrl, { path: '/socket.io' });
@@ -42,7 +41,6 @@ function Game({user}) {
         // Listen for connection event
         newSocket.on('connect', () => {
             console.log('Connected to server');
-            console.log(id);
             newSocket.emit('join', `${code}, ${id}`);
             setResponse('Connected to server');
         });
@@ -87,21 +85,17 @@ function Game({user}) {
         }
     }, [winner]);
       
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/firebase.User
-          const uid = user.uid;
-          setId(uid);
-        } else {
-          // User is signed out
-          // ...
-          console.log("user is logged out")
-          navigate("/")
-        }
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+            const uid = user.uid;
+            setId(uid);
+            } else {
+            console.log("user is logged out")
+            navigate("/")
+            }
+        });
     });
-
-    console.log(users);
 
     useEffect(() => {
         setTurn(instance === player)
@@ -133,12 +127,6 @@ function Game({user}) {
                     /> 
                 </div>
                 <div className='side-bar'>
-                    <PlayerList
-                        player1={users[0]}
-                        player2={users[1]}
-                        player3={users[2]}
-                        player4={users[3]}
-                    />
                     {turn && (  
                         <SideBar
                             pegs={pegs}
@@ -153,6 +141,13 @@ function Game({user}) {
                     )}
                 </div> 
             </div>
+            <PlayerList
+                currentPlayer={player}
+                player1={users[0]}
+                player2={users[1]}
+                player3={users[2]}
+                player4={users[3]}
+            />
         </div>
     ) : (
         <LoadingPage />
