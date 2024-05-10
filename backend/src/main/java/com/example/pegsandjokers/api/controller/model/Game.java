@@ -94,7 +94,6 @@ public class Game {
      */
     public Hole processMove(Peg peg, int spaces, boolean forward) {
         if (peg.getInHeaven()){
-            //TODO ADD index out of bounds catch of some kind
             System.out.println("MOVE IN HEAVEN");
             return moveInHeaven(peg, spaces);
         }
@@ -107,7 +106,10 @@ public class Game {
         while (count < spaces) {
             if (current.equals(peg.getPlayer().getHeavensGate()) && (spaces-count) <= SIZE_OF_HEAVEN && forward) {
                 System.out.println("PROCESS HEAVEN");
-                return processHeaven(peg, spaces-count);
+                Hole h = processHeaven(peg, spaces-count);
+                if (h != null){
+                    return h;
+                }
             }
 
             if (forward) {
@@ -166,7 +168,11 @@ public class Game {
 
         while (count < index + spaces){
             count++;
-            current = heaven[count];
+            if (count < heaven.length){
+                current = heaven[count];
+            } else {
+                return null;
+            }
 
             Peg obstacle = current.getPeg();
             if (obstacle != null) {
