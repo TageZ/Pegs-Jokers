@@ -37,6 +37,14 @@
   cursor: pointer;
 }
 
+.last-card {
+  background-color: inherit;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .turn-bar{
   width: 260px;
   background-color: inherit;

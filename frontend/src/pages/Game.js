@@ -18,6 +18,8 @@ function Game({user}) {
     const instance = {user}.user;
     const [pegs, setPegs] = useState([])
     const [card, setCard] = useState()
+    const [lastCard, setLastCard] = useState();
+    const [cardImage, setCardImage] = useState();
     const [cards, setCards] = useState([])
     const [player, setPlayer] = useState()
     const [newBoard, setBoard] = useState(true)
@@ -63,9 +65,20 @@ function Game({user}) {
             setResponse('Received response: ' + response)
         });
 
+        newSocket.on('winnerResponse', (response) => {
+            console.log('Game is Over:', response);
+            setOtherWinner(true);
+            setResponse('Received response: ' + response)
+        });
+
         newSocket.on('getUsers', (users) => {
             setUsers(users);
+            console.log(users); 
         });
+
+        newSocket.on('lastCard', (cardValue) => {
+            setCardImage(require(`../assets/cards/${cardValue}.png`));
+        })
         
         // Clean up on unmount
         return () => {
@@ -76,6 +89,7 @@ function Game({user}) {
     useEffect(() => {
         if (socket) {
             socket.emit('updateBoard', code);
+            socket.emit('updateCard', `${code}, ${lastCard}`);
         }
     }, [newBoard]);
 
@@ -90,9 +104,6 @@ function Game({user}) {
             if (user) {
             const uid = user.uid;
             setId(uid);
-            } else {
-            console.log("user is logged out")
-            navigate("/")
             }
         });
     });
@@ -137,6 +148,7 @@ function Game({user}) {
                             player={player}
                             code = {code}
                             setWinner={setWinner}
+                            setLastCard={setLastCard}
                         />
                     )}
                 </div> 
@@ -148,6 +160,9 @@ function Game({user}) {
                 player3={users[2]}
                 player4={users[3]}
             />
+            {cardImage && <div className='last-card'>
+                <img src={cardImage}/>
+            </div>}
         </div>
     ) : (
         <LoadingPage />
