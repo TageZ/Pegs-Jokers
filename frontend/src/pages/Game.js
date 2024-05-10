@@ -26,7 +26,7 @@ function Game({user}) {
     const [newBoard, setBoard] = useState(true)
     const [otherBoard, setOtherBoard] = useState(true)
     const [winner, setWinner] = useState(false);
-    const [otherWinner, setOtherWinner] = useState(true);
+    const [otherWinner, setOtherWinner] = useState(false);
     const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
     const [response, setResponse] = useState('Connected to server')
