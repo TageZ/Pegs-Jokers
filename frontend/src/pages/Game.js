@@ -130,8 +130,14 @@ function Game({user}) {
                         code = {code}
                     /> 
                 </div>
-                {turn ? (
-                    <div className='side-bar'>
+                <div className='side-bar'>
+                    <PlayerList
+                        player1={users[0]}
+                        player2={users[1]}
+                        player3={users[2]}
+                        player4={users[3]}
+                    />
+                    {turn && (  
                         <SideBar
                             pegs={pegs}
                             card={card}
@@ -142,10 +148,8 @@ function Game({user}) {
                             code = {code}
                             setWinner={setWinner}
                         />
-                    </div>
-                ) : (
-                    <div className='turn-bar'></div>
-                )}
+                    )}
+                </div> 
             </div>
         </div>
     ) : (
