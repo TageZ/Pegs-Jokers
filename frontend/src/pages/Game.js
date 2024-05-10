@@ -124,6 +124,8 @@ function Game({user}) {
                     <PlayerList
                         player1={users[0]}
                         player2={users[1]}
+                        player3={users[2]}
+                        player4={users[3]}
                     />
                     {turn && (  
                         <SideBar
