@@ -20,7 +20,7 @@ public class PegsAndJokersApplication {
         config.setHostname("localhost");
         config.setPort(3306);
         config.setContext("/socket.io");
-        config.setOrigin("*"); // Allow requests from all origins
+        config.setOrigin("*");
 
         SocketConfig socketConfig = new SocketConfig();
         socketConfig.setReuseAddress(true);
@@ -32,25 +32,20 @@ public class PegsAndJokersApplication {
         List<String> usernames = new ArrayList<>();
 
 
-        // Add connect listener
         server.addConnectListener(new ConnectListener() {
             public void onConnect(SocketIOClient client) {
-                System.out.println("Client connected: " + client.getRemoteAddress());
+
             }
         });
 
         server.addEventListener("updateBoard", String.class, new DataListener<String>() {
             public void onData(SocketIOClient client, String data, AckRequest ackRequest) throws Exception {
-                System.out.println("Received board update: " + data);
-                // Broadcast the updated board data only to clients in the same game room
                 server.getRoomOperations(data.trim()).sendEvent("updateBoardResponse", data);
             }
         });
 
         server.addEventListener("winner", String.class, new DataListener<String>() {
             public void onData(SocketIOClient client, String data, AckRequest ackRequest) throws Exception {
-                System.out.println("Winner found " + data);
-                // Broadcast the updated board data only to clients in the same game room
                 server.getRoomOperations(data.trim()).sendEvent("winnerResponse", data);
             }
         });
@@ -67,9 +62,7 @@ public class PegsAndJokersApplication {
 
                 client.set("username", username);
                 client.joinRoom(roomName);
-                System.out.println(username + " joined room " + roomName);
 
-                // Broadcast updated user list to all clients in the room
                 server.getRoomOperations(roomName).sendEvent("getUsers", usernames);
             }
         });
@@ -80,7 +73,6 @@ public class PegsAndJokersApplication {
                 String roomName = parts[0].trim();
                 String cardValue = parts[1].trim();
 
-                // Broadcast updated user list to all clients in the room
                 server.getRoomOperations(roomName).sendEvent("lastCard", cardValue);
             }
         });

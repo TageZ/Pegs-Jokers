@@ -33,22 +33,20 @@ const UserProfile = () => {
           setPhotoUrl(user.photoURL);
         }
       } else {
-        console.log("No user data available");
+        // No user data
       }
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      // Error
     }
   };
 
   function handleImage(e) {
     if (e.target.files[0]) {
       setPhoto(e.target.files[0]);
-      console.log("image");
     }
   }
 
   function handleUpload() {
-    console.log("upload");
     upload(photo, auth.currentUser, setLoading)
     .then(() => {
       alert("Image uploaded successfully");
@@ -57,7 +55,6 @@ const UserProfile = () => {
     .catch((error) => {
       // Error handling
       alert("Error uploading image:");
-      console.error("Error uploading image:", error);
     });
   }
 

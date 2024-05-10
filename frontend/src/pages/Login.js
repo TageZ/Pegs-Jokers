@@ -6,10 +6,8 @@ import {
   sendPasswordResetEmail
 } from "firebase/auth";
 import { auth, database } from "../firebase";
-import {push, child, ref, set} from "firebase/database"
-
-
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import {ref, set} from "firebase/database"
+import {Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,18 +21,13 @@ const Login = () => {
         // Signed in
         const user = userCredential.user;
         auth.setPersistence(browserLocalPersistence);
-
         const userRef = ref(database, `users/${user.uid}/last_login`);
-
         set(userRef, Date.now())
-
         navigate("/home");
-        console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
       });
   };
 
@@ -43,12 +36,10 @@ const Login = () => {
     sendPasswordResetEmail(auth, email)
     .then(() => {
       // Password reset email sent!
-      // ..
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      // ..
     });
   }
 

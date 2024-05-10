@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, database } from "../firebase";
-import {push, child, ref, set} from "firebase/database"
+import {ref, set} from "firebase/database"
 import "../Styling.css"
 
 const Signup = () => {
@@ -30,16 +30,11 @@ const Signup = () => {
         }
 
         set(userRef, user_data)
-
-        console.log(user);
         navigate("/login");
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        // ..
       });
   };
 

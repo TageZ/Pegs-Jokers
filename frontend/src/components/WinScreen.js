@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom'
 import { getPlayer } from "../firebase";
-import title1 from "../assets/title_1T.png"
 import joker from "../images/king.png"
 import '../WinScreen.css'
 import '../Styling.css'

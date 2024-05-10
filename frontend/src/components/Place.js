@@ -10,7 +10,6 @@ function Place({ position = null, piece = null, pathColor=null, setPegs, turn, p
     const tan = '#dfb289';
 
     useEffect(() => {
-        // Check if the position is 'path' and the piece is null to set the color to black
         if (position === 'path' && piece === null) {
             setHole({
                 background: 'black',
@@ -28,7 +27,7 @@ function Place({ position = null, piece = null, pathColor=null, setPegs, turn, p
                 borderRadius: '50%',
                 display: 'inline-block'
             });
-        } else { // Reset color if neither condition is met
+        } else {
             setHole({
                 background: '#444444',
                 height: '10px',
@@ -37,7 +36,7 @@ function Place({ position = null, piece = null, pathColor=null, setPegs, turn, p
                 display: 'inline-block'
             });
         }
-    }, [piece]); // Watch for changes in position and piece props
+    }, [piece]);
 
     const handlePegClick = () => {
         if (turn && piece && pegs.length < 2) {
