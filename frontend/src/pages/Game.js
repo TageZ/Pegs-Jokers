@@ -18,12 +18,15 @@ function Game({user}) {
     const instance = {user}.user;
     const [pegs, setPegs] = useState([])
     const [card, setCard] = useState()
+    const [lastCard, setLastCard] = useState();
+    const [cardImage, setCardImage] = useState();
     const [cards, setCards] = useState([])
+    const [cardUpdate, setCardUpdate] = useState(false);
     const [player, setPlayer] = useState()
     const [newBoard, setBoard] = useState(true)
     const [otherBoard, setOtherBoard] = useState(true)
     const [winner, setWinner] = useState(false);
-    const [otherWinner, setOtherWinner] = useState(false);
+    const [otherWinner, setOtherWinner] = useState(true);
     const [turn, setTurn] = useState(false);
     const [socket, setSocket] = useState(null);
     const [response, setResponse] = useState('Connected to server')
@@ -63,9 +66,26 @@ function Game({user}) {
             setResponse('Received response: ' + response)
         });
 
+        newSocket.on('winnerResponse', (response) => {
+            console.log('Game is Over:', response);
+            setOtherWinner(true);
+            setResponse('Received response: ' + response)
+        });
+
         newSocket.on('getUsers', (users) => {
             setUsers(users);
+            console.log(users); 
         });
+
+        newSocket.on('lastCard', (cardValue) => {
+            if (cardValue){
+                try {
+                    setCardImage(require(`../assets/cards/${cardValue}.png`));
+                } catch {
+                    //Didn't work
+                }
+            }
+        })
         
         // Clean up on unmount
         return () => {
@@ -76,6 +96,10 @@ function Game({user}) {
     useEffect(() => {
         if (socket) {
             socket.emit('updateBoard', code);
+            if (cardUpdate){
+                socket.emit('updateCard', `${code}, ${lastCard}`);
+                setCardUpdate(false);
+            }
         }
     }, [newBoard]);
 
@@ -90,9 +114,6 @@ function Game({user}) {
             if (user) {
             const uid = user.uid;
             setId(uid);
-            } else {
-            console.log("user is logged out")
-            navigate("/")
             }
         });
     });
@@ -101,8 +122,10 @@ function Game({user}) {
         setTurn(instance === player)
     }, [instance, player])
 
+    console.log(users);
+
     return otherWinner === true ? ( 
-        <WinScreen player={instance} winner={player}/>
+        <WinScreen player={instance} winner={player} playerID={users[instance]}/>
     ) : socket ? (
         <div className='game-page' data-testid="game-page">
             <NavBar title="Pegs & Jokers"/>
@@ -132,11 +155,13 @@ function Game({user}) {
                             pegs={pegs}
                             card={card}
                             setCard={setCard}
+                            setCardUpdate={setCardUpdate}
                             setPegs={setPegs}
                             setBoard={setBoard}
                             player={player}
                             code = {code}
                             setWinner={setWinner}
+                            setLastCard={setLastCard}
                         />
                     )}
                 </div> 
@@ -148,6 +173,9 @@ function Game({user}) {
                 player3={users[2]}
                 player4={users[3]}
             />
+            {cardImage && <div className='last-card'>
+                <img src={cardImage}/>
+            </div>}
         </div>
     ) : (
         <LoadingPage />

@@ -93,6 +93,9 @@ public class Game {
      * @return - The hole the peg is wanting to move to if valid, otherwise null.
      */
     public Hole processMove(Peg peg, int spaces, boolean forward) {
+        if (peg.getInHome()){
+            return null;
+        }
         if (peg.getInHeaven()){
             System.out.println("MOVE IN HEAVEN");
             return moveInHeaven(peg, spaces);
@@ -215,6 +218,10 @@ public class Game {
      * @return - Whether the move was successful.
      */
     public boolean splitMove(Peg peg1, Peg peg2, Card card, int spaces, boolean forward) {
+        if (peg1.getInHome() || peg2.getInHome()){
+            return false;
+        }
+
         //Get value of the card (either a SEVEN or a NINE).
         Value value = card.getValue();
 

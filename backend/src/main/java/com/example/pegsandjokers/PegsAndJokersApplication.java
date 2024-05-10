@@ -6,6 +6,7 @@ import com.corundumstudio.socketio.listener.DataListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,7 @@ public class PegsAndJokersApplication {
 
 
         SocketIOServer server = new SocketIOServer(config);
+        List<String> usernames = new ArrayList<>();
 
 
         // Add connect listener
@@ -58,17 +60,28 @@ public class PegsAndJokersApplication {
                 String[] parts = data.split(",");
                 String roomName = parts[0].trim();
                 String username = parts[1].trim();
+
+                if (!usernames.contains(username)) {
+                    usernames.add(username);
+                }
+
                 client.set("username", username);
                 client.joinRoom(roomName);
                 System.out.println(username + " joined room " + roomName);
 
-                // Get updated list of usernames
-                List<String> usernames = server.getRoomOperations(roomName).getClients().stream()
-                        .map(c -> c.get("username").toString())
-                        .collect(Collectors.toList());
-
                 // Broadcast updated user list to all clients in the room
                 server.getRoomOperations(roomName).sendEvent("getUsers", usernames);
+            }
+        });
+
+        server.addEventListener("updateCard", String.class, new DataListener<String>() {
+            public void onData(SocketIOClient client, String data, AckRequest ackRequest) throws Exception {
+                String[] parts = data.split(",");
+                String roomName = parts[0].trim();
+                String cardValue = parts[1].trim();
+
+                // Broadcast updated user list to all clients in the room
+                server.getRoomOperations(roomName).sendEvent("lastCard", cardValue);
             }
         });
 
