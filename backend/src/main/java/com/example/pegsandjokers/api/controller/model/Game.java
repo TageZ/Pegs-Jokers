@@ -97,7 +97,6 @@ public class Game {
             return null;
         }
         if (peg.getInHeaven()){
-            System.out.println("MOVE IN HEAVEN");
             return moveInHeaven(peg, spaces);
         }
         Hole[] loop = this.board.getLoop();
@@ -108,7 +107,6 @@ public class Game {
 
         while (count < spaces) {
             if (current.equals(peg.getPlayer().getHeavensGate()) && (spaces-count) <= SIZE_OF_HEAVEN && forward) {
-                System.out.println("PROCESS HEAVEN");
                 Hole h = processHeaven(peg, spaces-count);
                 if (h != null){
                     return h;
@@ -154,7 +152,6 @@ public class Game {
         }
 
         Hole h = current;
-        System.out.println("TESTING ADDING PEG TO HOLE: " + h);
         if (this.testAddPegToHole(peg, h)){
             peg.setInHeaven(true);
             return h;
