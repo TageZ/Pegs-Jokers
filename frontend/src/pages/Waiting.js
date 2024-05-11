@@ -12,7 +12,6 @@ function Waiting() {
     const inputRef = useRef(null);
     const navigate = useNavigate();
     const [socket, setSocket] = useState(null);
-    // const [code, setCode] = useState('');
     const [roomFull, setRoomFull] = useState(false);
     const [roomExists, setRoomExists] = useState(true);
     const [roomNotMade, setRoomMade] = useState(false);
@@ -46,11 +45,10 @@ function Waiting() {
  
     const handleLogout = () => {               
         signOut(auth).then(() => {
-        // Sign-out successful.
-            // navigate("/");
+            navigate("/");
             console.log("Signed out successfully")
         }).catch((error) => {
-        // An error happened.
+            console.log("An error occurred at logout");
         });
     }
 
@@ -123,16 +121,10 @@ function Waiting() {
     useEffect(()=>{
         onAuthStateChanged(auth, (user) => {
             if (user) {
-              // User is signed in, see docs for a list of available properties
-              // https://firebase.google.com/docs/reference/js/firebase.User
               const uid = user.uid;
-              // ...
               console.log("uid", uid)
             } else {
-              // User is signed out
-              // ...
               console.log("user is logged out")
-              navigate("/")
             }
           });
          

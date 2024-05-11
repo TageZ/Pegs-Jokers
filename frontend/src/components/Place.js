@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import '../Styling.css'
 
-function Place({ position = null, piece = null, pathColor=null, setPegs, turn, pegs}) {
+function Place({ position = null, piece = null, pathColor = null, setPegs, turn, pegs}) {
 
-    const [hole, setHole] = useState(); // Initialize color state with an empty string
-    const [background, setBackground] = useState(pathColor == null ? '#444444' : pathColor)
+    const [hole, setHole] = useState();
+    const background = pathColor == null ? '#444444' : pathColor;
 
     const brown = '#61483e';
     const tan = '#dfb289';

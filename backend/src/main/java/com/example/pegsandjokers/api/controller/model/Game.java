@@ -134,6 +134,12 @@ public class Game {
         return null;
     }
 
+    /**
+     * Handles moving a piece that isn't in heaven into heaven (starting at heaven's gate).
+     * @param peg - the peg to be moved
+     * @param spaces - the number of spaces to move the peg.
+     * @return - the Hole to add the peg to if successful, null otherwise.
+     */
     public Hole processHeaven(Peg peg, int spaces){
         Integer playerID = peg.getPlayer().getId();
         Hole current = peg.getPlayer().getHeavensGate();
@@ -159,6 +165,12 @@ public class Game {
         return null;
     }
 
+    /**
+     * Controls moving a piece that is already in heaven.
+     * @param peg - the peg being played
+     * @param spaces - the nubmer of pieces to move the peg
+     * @return - the Hole to add the peg to if successful, null otherwise.
+     */
     public Hole moveInHeaven(Peg peg, int spaces){
         Integer playerID = peg.getPlayer().getId();
         Hole[] heaven = this.board.getHeavens()[playerID];
@@ -188,6 +200,12 @@ public class Game {
         return null;
     }
 
+    /**
+     * Moves a peg based on a card.
+     * @param peg - the peg to be moved
+     * @param card - the card being played
+     * @return - whether the move was successful
+     */
     public boolean move(Peg peg, Card card){
         Value value = card.getValue();
         switch (value) {

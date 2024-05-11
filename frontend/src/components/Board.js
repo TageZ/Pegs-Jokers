@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import Place from './Place'
 import '../Styling.css'
 
@@ -22,7 +22,8 @@ function Board({setPegs, pegs, newBoard, setBoard, setCards, setPlayer, user, tu
             const result = await response.json();
             setData(result);
         } catch (error) {
-            // Error
+            //Error
+            console.log("Error getting board");
         }
     }
 
@@ -145,6 +146,7 @@ function Board({setPegs, pegs, newBoard, setBoard, setCards, setPlayer, user, tu
         }
         setCards(cards);
         setPlayer(data.playerTurn);
+        const sizeBoardSegment = 18;
 
         let newGrid = <div style={gridContainer}>
             {
@@ -157,22 +159,22 @@ function Board({setPegs, pegs, newBoard, setBoard, setCards, setPlayer, user, tu
                             const peg = data.loop[indexJ - 1].peg
                             return <Place piece={peg} pathColor={pathColor} position={'path'} setPegs={setPegs} pegs={pegs} turn={turn}/>;
                         }
-
+                        //Num Player 1's
                         else if (indexI > 0 && indexJ == row.length - 1) {
                             const pathColor = tan;
-                            const peg = data.loop[18 + indexI - 1].peg
+                            const peg = data.loop[sizeBoardSegment + indexI - 1].peg
                             return <Place piece={peg} pathColor={pathColor} position={'path'} setPegs={setPegs} pegs={pegs} turn={turn}/>;
                         }
-
+                        //Num Player 2's
                         else if (indexI == initialBoard.length - 1 && indexJ < row.length - 1) {
                             const pathColor = brown;
-                            const peg = data.loop[36 + (row.length - 2 - indexJ)].peg
+                            const peg = data.loop[sizeBoardSegment * 2 + (row.length - 2 - indexJ)].peg
                             return <Place piece={peg} pathColor={pathColor} position={'path'} setPegs={setPegs} pegs={pegs} turn={turn}/>;
                         }
-
+                        //Num Player 3's
                         else if (indexI < initialBoard.length - 1 && indexJ == 0) {
                             const pathColor = tan;
-                            const peg = data.loop[54 + (initialBoard.length - 2 - indexI)].peg
+                            const peg = data.loop[sizeBoardSegment * 3 + (initialBoard.length - 2 - indexI)].peg
                             return <Place piece={peg} pathColor={pathColor} position={'path'} setPegs={setPegs} pegs={pegs} turn={turn}/>;
                         } else {
                             return checkSection(indexI, indexJ)

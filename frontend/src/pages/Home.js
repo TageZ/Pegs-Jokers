@@ -11,10 +11,9 @@ function Home() {
  
     const handleLogout = () => {               
         signOut(auth).then(() => {
-        // Sign-out successful.
             navigate("/");
         }).catch((error) => {
-        // An error happened.
+            
         });
     }
 

@@ -1,7 +1,7 @@
 import React, {useState, useRef } from 'react'
 import '../Styling.css'
 
-export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code, setWinner, setLastCard, setCardUpdate}) {
+export function SideBar({pegs, card, setPegs, setCard, setBoard, code, setWinner, setLastCard, setCardUpdate}) {
 
   const [splitMove, setSplitMove] = useState(false);
   const [spaces, setSpaces] = useState(null);
@@ -74,6 +74,7 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code, s
       
     } catch (error) {
       // Error
+      console.log("Error playing turn");
     }
   };
 
