@@ -57,11 +57,11 @@ function Game({user}) {
 
         // Listen for winner response
         newSocket.on('winnerResponse', (response) => {
+            console.log('Game is Over:', response);
             setOtherWinner(true);
             setResponse('Received response: ' + response)
         });
 
-        // Gets users
         newSocket.on('getUsers', (users) => {
             setUsers(users);
         });
