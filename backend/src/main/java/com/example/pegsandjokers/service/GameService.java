@@ -26,30 +26,46 @@ public class GameService {
         return optional;
     }
 
+    /**
+     * Takes in a turn object and based on the aspects of the turn, will call one of the movement functions on the game that has
+     * the roomName of the turn.
+     * @param turn - the turn object that contains the information for the move.
+     * @return - whether the move was successful
+     */
     public boolean takeTurn(Turn turn) {
         Game g = getGameByRoomName(turn.getRoomName());
         Player player = g.getPlayers()[g.getPlayerTurn()];
+
+        //If the turn doesn't have a peg, that means it's a discard.
         if (turn.getP() == null){
             return true;
         }
+
+        //Get aspects of the turn
         Peg p = getPeg(turn.getP(), player);
         Peg p2 = turn.getP2();
         Card c = turn.getCard();
         int spaces = turn.getSpaces();
         boolean forward = turn.isForward();
 
+        //If p wasn't found, means the piece wasn't player/partner piece.
         if (p == null){
             return false;
+        //If the piece is in home & not a joker, get out.
         } else if (p.getInHome() && !c.getValue().equals(Value.JOKER)) {
+            //Make sure they are getting out with ace or face card
             if (!(c.getValue().equals(Value.ACE) || c.getValue().equals(Value.JACK) || c.getValue().equals(Value.KING) || c.getValue().equals(Value.QUEEN))){
                 return false;
             }
             return g.getOut(p);
+        //If there is another peg.
         } else if (p2 != null){
             Player player2 = g.getPlayers()[getNumPlayerFromColor(p2.getColor())];
             p2 = getPeg(turn.getP2(), player2);
+            //Swap move if two
             if (c.getValue().equals(Value.TWO)) {
                 return g.swap(p, p2);
+            //Joker move if joker.
             } else if (c.getValue().equals(Value.JOKER)) {
                 if (p2.getInHome()){
                     return false;
@@ -61,11 +77,13 @@ public class GameService {
                     return true;
                 }
                 return false;
+            //Split move if seven or nine.
             } else if (c.getValue().equals(Value.SEVEN) || c.getValue().equals(Value.NINE)) {
                 return g.splitMove(p, p2, c, spaces, forward);
             }
         }
         else {
+            //Otherwise, just return basic move function with peg and card.
             return g.move(p, c);
         }
         return false;

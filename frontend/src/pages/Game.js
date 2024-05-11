@@ -8,7 +8,7 @@ import { Hand } from '../components/Hand';
 import io from 'socket.io-client';
 import '../Styling.css'
 import WinScreen from '../components/WinScreen';
-import { useParams, useNavigate} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { onAuthStateChanged} from "firebase/auth";
 import { auth } from '../firebase';
 
@@ -72,7 +72,8 @@ function Game({user}) {
                 try {
                     setCardImage(require(`../assets/cards/${cardValue}.png`));
                 } catch {
-                    //Didn't work
+                    //ERROR
+                    console.log('Could not find image');
                 }
             }
         })
@@ -123,7 +124,6 @@ function Game({user}) {
                 </div>
                 <div className='game-body'>
                     <Board
-                        setCard={setCard}
                         setPegs={setPegs}
                         pegs={pegs}
                         newBoard={newBoard}
@@ -142,14 +142,13 @@ function Game({user}) {
                         <SideBar
                             pegs={pegs}
                             card={card}
-                            setCard={setCard}
-                            setCardUpdate={setCardUpdate}
                             setPegs={setPegs}
+                            setCard={setCard}
                             setBoard={setBoard}
-                            player={player}
                             code = {code}
                             setWinner={setWinner}
                             setLastCard={setLastCard}
+                            setCardUpdate={setCardUpdate}
                         />
                     )}
                 </div> 

@@ -30,67 +30,46 @@ function PlayerList({player1, player2, player3, player4, currentPlayer}){
     
     async function fetchPlayers(p1, p2, p3, p4) {
 
-    if (p1) {
-        const [photo1, pName1] = await getPlayer(p1);
-        setP1PhotoUrl(photo1);
-        setP1Name(pName1);
-    }
-    if (p2) {
-        const [photo2, pName2] = await getPlayer(p2);
-        setP2PhotoUrl(photo2);
-        setP2Name(pName2);    
-    }
-    if (p3) {
-        const [photo3, pName3] = await getPlayer(p3);
-        setP3PhotoUrl(photo3);
-        setP3Name(pName3);
-    }
-    if (p4) {
-        const [photo4, pName4] = await getPlayer(p4);
-        setP4PhotoUrl(photo4);
-        setP4Name(pName4);    
-    }
+      if (p1) {
+          const [photo1, pName1] = await getPlayer(p1);
+          setP1PhotoUrl(photo1);
+          setP1Name(pName1);
+      }
+      if (p2) {
+          const [photo2, pName2] = await getPlayer(p2);
+          setP2PhotoUrl(photo2);
+          setP2Name(pName2);    
+      }
+      if (p3) {
+          const [photo3, pName3] = await getPlayer(p3);
+          setP3PhotoUrl(photo3);
+          setP3Name(pName3);
+      }
+      if (p4) {
+          const [photo4, pName4] = await getPlayer(p4);
+          setP4PhotoUrl(photo4);
+          setP4Name(pName4);    
+      }
     }
 
     return (
-        <div className="players">
-          {player1 && (
-            <div className="display-name">
-              <div className="player-info">
-                <img src={p1PhotoURL} alt="Player 1 Picture" className="player-pic player-1" />
-                <span className={currentPlayer === 0 ? "player-name current" : "player-name"}>{p1Name}</span>
+      <div className="players">
+        {[1, 2, 3, 4].map((playerIndex) => {
+          const playerName = eval(`p${playerIndex}Name`);
+          const playerPhotoURL = eval(`p${playerIndex}PhotoURL`);
+          return (
+            playerIndex <= 4 && eval(`player${playerIndex}`) && (
+              <div className="display-name" key={playerIndex}>
+                <div className="player-info">
+                  <img src={playerPhotoURL} alt={`Player ${playerIndex} Picture`} className={`player-pic player-${playerIndex}`} />
+                  <span className={currentPlayer === playerIndex - 1 ? "player-name current" : "player-name"}>{playerName}</span>
+                </div>
               </div>
-            </div>
-          )}
-
-          {player2 && (
-            <div className="display-name">
-              <div className="player-info">
-                <img src={p2PhotoURL} alt="Player 2 Picture" className="player-pic player-2" />
-                <span className={currentPlayer === 1 ? "player-name current" : "player-name"}>{p2Name}</span>
-              </div>
-            </div>
-          )}
-
-          {player3 && (
-            <div className="display-name">
-              <div className="player-info">
-                <img src={p3PhotoURL} alt="Player 3 Picture" className="player-pic player-3" />
-                <span className={currentPlayer === 2 ? "player-name current" : "player-name"}>{p3Name}</span>
-              </div>
-            </div>
-          )}
-
-          {player4 && (
-            <div className="display-name">
-              <div className="player-info">
-                <img src={p4PhotoURL} alt="Player 4 Picture" className="player-pic player-4" />
-                <span className={currentPlayer === 3 ? "player-name current" : "player-name"}>{p4Name}</span>
-              </div>
-            </div>
-          )}
-        </div>
-      );
+            )
+          );
+        })}
+      </div>
+    );
 };
 
 export default PlayerList;

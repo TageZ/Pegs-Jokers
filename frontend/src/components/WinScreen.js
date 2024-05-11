@@ -24,49 +24,24 @@ const WinScreen = ({ player, winner, playerID }) => {
     }
   }
   
-  if (playerWon){
-    return (
-      <div className="win-screen">
-        <div className="win-screen-header">
-          <h1 className="victory">
-              VICTORY!
-          </h1>
-          <h1 className="win-text">
-            Congrats {playerName}, you won!
-          </h1>
+  return (
+    <div className="win-screen">
+      <div className="win-screen-header">
+        <h1 className="victory">{playerWon ? "VICTORY!" : "DEFEAT!"}</h1>
+        <h1 className="win-text">
+          {playerWon ? `Congrats ${playerName}, you won!` : `Sorry ${playerName}, you lost!`}
+        </h1>
+      </div>
+      <div className="win-screen-elements">
+        <div className="win-screen-element">
+          <img className='joker' src={joker} alt="Joker"/>
         </div>
-        <div className="win-screen-elements">
-          <div className="win-screen-element">
-              <img className='joker' src={joker}/>
-          </div>
-          <div className="win-screen-element">
-            <Link className="button-1" to='/home'>Home</Link>
-          </div>
+        <div className="win-screen-element">
+          <Link className="button-1" to='/home'>Home</Link>
         </div>
       </div>
-    );
-  } else {
-    return (
-      <div className="win-screen">
-        <div className="win-screen-header">
-          <h1 className="victory">
-              DEFEAT!
-          </h1>
-          <h1 className="win-text">
-            Sorry {playerName}, you lost!
-          </h1>
-        </div>
-        <div className="win-screen-elements">
-          <div className="win-screen-element">
-              <img className='joker' src={joker}/>
-          </div>
-          <div className="win-screen-element">
-            <Link className="button-1" to='/home'>Home</Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default WinScreen;
