@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react'
-import {Outlet, Link, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import '../Styling.css';
 import { onAuthStateChanged, signOut} from "firebase/auth";
 import { auth } from '../firebase';
 import title1 from "../assets/title_1T.png"
 import { useState, useRef } from 'react';
-import {useParams} from 'react-router-dom'
 import io from 'socket.io-client';
 
 function Waiting() {
@@ -13,8 +12,7 @@ function Waiting() {
     const inputRef = useRef(null);
     const navigate = useNavigate();
     const [socket, setSocket] = useState(null);
-    const [numUsers, setNumUsers] = useState(0);
-    const [code, setCode] = useState('');
+    // const [code, setCode] = useState('');
     const [roomFull, setRoomFull] = useState(false);
     const [roomExists, setRoomExists] = useState(true);
     const [roomNotMade, setRoomMade] = useState(false);

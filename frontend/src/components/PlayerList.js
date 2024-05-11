@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { auth, database, getPlayer } from "../firebase";
-import { ref, get, child } from "firebase/database";
+import {getPlayer} from "../firebase";
 
 
 

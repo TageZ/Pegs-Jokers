@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, {useState, useRef } from 'react'
 import '../Styling.css'
 
 export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code, setWinner, setLastCard, setCardUpdate}) {
@@ -73,7 +73,7 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, player, code, s
       }
       
     } catch (error) {
-      console.error('Error:', error);
+      // Error
     }
   };
 

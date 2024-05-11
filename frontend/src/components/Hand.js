@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import '../Styling.css'
 
 export function Hand({setCard, hand}){
 
-    
     function handleConfirm(card) {
         setCard({ "value": card });
     }
