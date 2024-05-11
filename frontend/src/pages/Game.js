@@ -66,12 +66,6 @@ function Game({user}) {
             setResponse('Received response: ' + response)
         });
 
-        newSocket.on('winnerResponse', (response) => {
-            console.log('Game is Over:', response);
-            setOtherWinner(true);
-            setResponse('Received response: ' + response)
-        });
-
         newSocket.on('getUsers', (users) => {
             setUsers(users);
             console.log(users); 
