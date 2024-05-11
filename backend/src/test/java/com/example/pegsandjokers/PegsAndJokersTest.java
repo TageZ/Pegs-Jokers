@@ -393,10 +393,11 @@ public class PegsAndJokersTest {
 
 		//Execute
 		g.getOut(peg);
-		g.setPegOnHole(peg2, g.getBoard().getLoop()[HOME_STEP - 1]);
+		g.move(peg, new Card(Value.TEN));
+		g.getOut(peg2);
 
 		//Test
-		assert(g.splitMove(peg, peg2, new Card(Value.NINE), 8, true));
+		assert(g.splitMove(peg, peg2, new Card(Value.NINE), 1, true));
 	}
 
 	@Test
