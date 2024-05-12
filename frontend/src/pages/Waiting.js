@@ -19,7 +19,7 @@ function Waiting() {
 
     const connectToServer = (code) => {
         return new Promise((resolve, reject) => {
-            const socketUrl = `http://localhost:3306/`;
+            const socketUrl = `http://18.118.26.199:8000`;
             const newSocket = io(socketUrl, { path: '/socket.io' });
             setSocket(newSocket);
     
@@ -101,7 +101,7 @@ function Waiting() {
 
     async function createGame(code) {
         try {
-          const url = 'http://localhost:8080/game?roomName=' + code;
+          const url = 'http://18.118.26.199:8080/game?roomName=' + code;
     
           const request = {
             method: 'POST',

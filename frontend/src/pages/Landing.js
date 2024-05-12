@@ -10,7 +10,7 @@ function Landing() {
     return (
         <div className="landing-page">
             <img className='king' src={King}/>
-            <div class="title-options-container">
+            <div className="title-options-container">
                 <div className="title-container">
                     <img src={title1} alt="Pegs And Jokers" />
                 </div>

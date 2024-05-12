@@ -18,7 +18,7 @@ public class PegsAndJokersApplication {
 
         Configuration config = new Configuration();
         config.setHostname("localhost");
-        config.setPort(3306);
+        config.setPort(8000);
         config.setContext("/socket.io");
         config.setOrigin("*");
 

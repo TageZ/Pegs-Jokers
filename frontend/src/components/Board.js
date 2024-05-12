@@ -8,7 +8,7 @@ function Board({setPegs, pegs, newBoard, setBoard, setCards, setPlayer, user, tu
 
     async function getBoard() {
         try {
-            const response = await fetch("http://localhost:8080/board?roomName=" + code, {
+            const response = await fetch("http://18.118.26.199:8080/board?roomName=" + code, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

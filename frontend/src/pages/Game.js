@@ -34,7 +34,7 @@ function Game({user}) {
     const [id, setId] = useState('');
 
     useEffect(() => {
-        const socketUrl = `http://localhost:3306/`;
+        const socketUrl = `http://18.118.26.199:8000`;
         const newSocket = io(socketUrl, { path: '/socket.io' });
         setSocket(newSocket);
     

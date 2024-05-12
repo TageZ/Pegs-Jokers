@@ -51,7 +51,7 @@ export function SideBar({pegs, card, setPegs, setCard, setBoard, code, setWinner
 
   async function postTurn(turn) {
     try {
-      const url = 'http://localhost:8080/play/turn';
+      const url = 'http://18.118.26.199:8080/play/turn';
 
       const request = {
         method: 'POST',
