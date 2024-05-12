@@ -6,25 +6,55 @@ import NavBar from './components/NavBar';
 
 describe('Game component', () => {
   it('renders game', () => {
-    render(<Game />);
+    render(<Game user={0}/>);
     const element = screen.getByTestId('game-page');
     expect(element).toBeInTheDocument();
   });
 
   it('renders board', () => {
-    render(<Game />);
+    render(<Game user={0}/>);
     const element = screen.getByTestId('board-grid');
     expect(element).toBeInTheDocument();
   });
 
+  it('renders hand', () => {
+    render(<Game user={0}/>);
+    const element = screen.getByTestId('hand');
+    expect(element).toBeInTheDocument();
+  });
+
+  it('renders side-bar', () => {
+    render(<Game user={0}/>);
+    const element = screen.getByTestId('side-bar');
+    expect(element).toBeInTheDocument();
+  });
+
+  it('renders turn-bar if turn', () => {
+    render(<Game user={0}/>);
+    const element = screen.getByTestId('turn-bar');
+    expect(element).toBeInTheDocument();
+  });
+
+  it('does not render turn-bar if not turn', () => {
+    render(<Game user={1}/>);
+    const element = screen.getByTestId('turn-bar');
+    expect(element).not.toBeInTheDocument();
+  });
+
+  it('renders players', () => {
+    render(<Game user={0}/>);
+    const element = screen.getByTestId('players');
+    expect(element).toBeInTheDocument();
+  });
+
   it('game connects to socket server', () => {
-    render(<Game />);
+    render(<Game user={0}/>);
     const element = screen.getByText('Connected to server');
     expect(element).toBeInTheDocument();
   });
 
   it('recieves response from server', () => {
-    render(<Game />);
+    render(<Game user={0}/>);
     const input = screen.getByRole('textbox');
     fireEvent.change(input, { target: { value: 'A1' } });
 
@@ -51,4 +81,3 @@ describe('Game component', () => {
   });
 
 });
-
