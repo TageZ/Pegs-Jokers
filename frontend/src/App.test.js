@@ -81,4 +81,3 @@ describe('Game component', () => {
   });
 
 });
-
